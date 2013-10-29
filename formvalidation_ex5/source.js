@@ -14,6 +14,7 @@ var Validations = {
 				return false;
 			}
 		}
+		return true;
 	},
 
 	checkLimit: function() {
@@ -24,6 +25,7 @@ var Validations = {
 			element.focus();
 			return false;
 		}
+		else { return true; }
 	},
 
 	disableButton: function() {
