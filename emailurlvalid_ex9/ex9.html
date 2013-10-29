@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv = "Content-Type" content = "text/html; charset=utf-8">
+    <link href = "style.css" type = "text/css" rel = "stylesheet" />
+    <script type="text/javascript" src="source.js"></script>
+  </head>
+  <body onload="Validations.disableButton()">
+
+    <div id = "container" >
+      <div id = "header" class="fl full">Registration Form</div>
+      <form accept-charset = "utf-8" onsubmit = "return Validations.init()"> 
+        <dl class="fl">
+          <dt class="fl">Login Name:</dt>
+          <dd class="fl"><input type ="text" class = "required" name= "Login name" /></dd>
+        </dl>
+        <dl class="fl">
+          <dt class="fl">Email:</dt>
+          <dd class="fl"><input type = "text" class = "required bg-color" id="email" name = "emailid" /></dd>
+        </dl>
+        <dl class="fl">
+          <dt class="fl">Name:</dt>
+          <dd class="fl"><input type = "text" class = "required bg-color" name="username"/></dd>
+        </dl>
+        <dl class="fl">
+          <dt class="fl">Timezone:</dt>
+          <dd class="fl">
+            <select id = "select_box">
+              <option>GMT</option>
+              <option></option>
+            </select>
+          </dd>
+        </dl>
+        <dl class="fl">
+          <dt class="fl">Home Page:</dt>
+          <dd class="fl"><input type = "text" class = "required" name = "homepage" id = "url" /></dd>
+        </dl>
+        <dl class="fl">
+          <dt class="fl">About Me</dt><br />
+          <dd class="fl desc"><textarea rows = "10" cols = "70" onchange = "Validations.checkLimit()" class="fl full required" name="About me" id="about"></textarea></dd>
+        </dl>
+        <div class="fl full">
+          <input type = "checkbox" id = "notify" onclick="Validations.enableButton(this)" />
+          <span>Receive notification of comments.</span> 
+        </div>
+        <div class="info full fl">
+          <p>You will be sent an email when someone posts comments to your blog or Album.</p>
+          <p>Your password will be mailed to you.</p>
+        </div>
+        <div class="button fl full">
+          <input type = "submit" value = "GO" id = "submit-button" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
