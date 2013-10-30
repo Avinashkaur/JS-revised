@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script type="text/javascript" src = "source.js"> </script>
   </head>
   <body>
     <h2>Arithmetic Test</h2>
@@ -11,7 +10,12 @@
     <dt>Each question has to be answered in 10 seconds.</dt>
     <dt>The candidate cannot go back and change the answered question.</dt>
     <dt>You will be awarded +1 for every correct answer and 0 for every wrong or unattempted answer</dt>
-    <input type = "button" id = "button1" onclick = "ArithmeticTest.init()" value = "Start Test" />
+    <input type = "button" id = "button1" onclick = "openTestWindow()" value = "Start Test" />
    
   </body>
+  <script type="text/javascript">
+    var openTestWindow = function() {
+      window.open('test.html', '_blank', "width = 300 height = 500 scrollable = no toolbar = no");
+    } 
+  </script>
 </html>
