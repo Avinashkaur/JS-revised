@@ -5,7 +5,7 @@ var domainSubDomain = function() {
   var urlvalue = url.trim();
 
   if ((urlvalue.length != 0) && (urlregex.test(urlvalue))) {
-    var sub = RegExp.$3;
+    var sub = RegExp.$2;
     var subdomain = sub.substr(0, sub.length-1);
     if (subdomain.length == 0) {
       alert("Domain: " + RegExp.$5);
