@@ -14,10 +14,12 @@ User.prototype.compare = function(object) {
 
 };
 
-var user1 = new User();
-user1.name = "Sahil";
-user1.age = 28;
-var user2 = new User();
-user2.name = "Karan";
-user2.age = 26;
-user1.compare(user2);
+window.onload=function(){
+	var user1 = new User();
+	user1.name = "Sahil";
+	user1.age = 28;
+	var user2 = new User();
+	user2.name = "Karan";
+	user2.age = 26;
+	user1.compare(user2);
+}
