@@ -1,18 +1,10 @@
+var question = document.getElementById('question');
+var answer = document.getElementById('answer');
+var timerlabel = document.getElementById('timer');
+var timer = 10, totalquestions = 10;
+var current = 0, score = 0, JSONarray = [], showtime, correct = 0, unattempted = 0;
+
 var ArithmeticTest = {
-
-	init: function() {
-
-		var question = document.getElementById('question');
-		var answer = document.getElementById('answer');
-		// var timerlabel = document.getElementById('timer');
-		timer = 10;
-		current = 0;
-		score = 0;
-		JSONarray = [];
-		showtime = 0;
-		correct = 0;
-		unattempted = 0;
-	},
 
 	getrandomnumber: function() {
 		return Math.floor(Math.random() * 20);
@@ -25,7 +17,7 @@ var ArithmeticTest = {
 	},
 
 	createJSON: function() {
-		for (var i = 0; i < 4; i++) {
+		for (var i = 0; i < totalquestions; i++) {
 			JSONarray[i] = {
 				"operand1" : ArithmeticTest.getrandomnumber(),
 				"operator" : ArithmeticTest.getrandomoperator(),
@@ -37,27 +29,36 @@ var ArithmeticTest = {
 	},
 
 	showquestion: function() {
-		ArithmeticTest.resettimer();
     answer.disabled = false;
-		
-		// question.innerText = "";
+    ArithmeticTest.resettimer();
 		answer.value = "";
 		var quesstring = JSONarray[current].operand1 + JSONarray[current].operator + JSONarray[current].operand2;
 		question.innerText = quesstring;
-		JSONarray[current].testanswer = eval(quesstring).toFixed(2);	
+		JSONarray[current].testanswer = parseFloat(eval(quesstring), 10).toFixed(2);	
+	},
+
+	submitanswer: function() {
+		answer.disabled = true;
+		JSONarray[current].useranswer = answer.value.trim();
+		ArithmeticTest.calculatescore();
+		current++;
+		if (current < totalquestions) {
+      ArithmeticTest.showquestion();  
+		}
+		else {
+			ArithmeticTest.displayresult();
+		}	
 	},
 
 	calculatescore: function() {
     var showscore = document.getElementById('score');
-    // showscore.innerText = "";
-
-		if(JSONarray[current].useranswer == JSONarray[current].testanswer) {
+		if (parseFloat(JSONarray[current].useranswer, 10).toFixed(2) == JSONarray[current].testanswer) {
 			score = score + 1;
 			correct = correct + 1;
 		}
-		// else if (JSONarray[current].useranswer.trim() == "") {
-		// 	unattempted = unattempted + 1;
-		// }
+		else if (JSONarray[current].useranswer == "") {
+			unattempted = unattempted + 1;
+		}
 		showscore.innerText = score;
 	},
 
@@ -68,46 +69,27 @@ var ArithmeticTest = {
 	},
 
 	cleartimer: function() {
-		var timerlabel = document.getElementById('timer');
-		
 		if ((timer <= 10) && (timer > 0)) {
+			console.log(timer);
 			timer = timer - 1;
 			timerlabel.innerText = "Time Left: " + timer + " seconds";
-			
 		}
 		else {
-			clearInterval(showtime);
-			unattempted = unattempted + 1;
 			answer.disabled = true;
+			clearInterval(showtime);
 			ArithmeticTest.submitanswer();		
 		}
 
 	},
 
-	submitanswer: function() {
-		
-		JSONarray[current].useranswer = parseFloat(answer.value.trim()).toFixed(2);
-
-		if (JSONarray[current].useranswer.length == 0) { unattempted = unattempted + 1;}
-		ArithmeticTest.calculatescore();
-		current++;
-		if (current < 4) {
-      ArithmeticTest.showquestion();
-      
-		}
-		else {
-			ArithmeticTest.displayresult();
-		}	
-	},
-
 	displayresult: function() {
-		document.getElementById('timer').style.display = "none";
+		timerlabel.style.display = "none";
     document.getElementById('nextbutton').style.display = "none";
     document.getElementById('score').style.display = "none";
 
     answer.style.display = "none";
     question.innerHTML = "Your score: " + correct;
-    document.getElementById('wrong').innerText = "Wrong: " + (4 - (correct + unattempted));
+    document.getElementById('wrong').innerText = "Wrong: " + (totalquestions - (correct + unattempted));
     document.getElementById('unattempted').innerText = "Unattempted: " + unattempted;
     var summary = "";
 
@@ -116,13 +98,10 @@ var ArithmeticTest = {
     		summary = summary + "Question:" + (i + 1) + " Correct answer: " + JSONarray[i].testanswer + "<br>";
     	}
     }
-
     document.getElementById('show').innerHTML = summary;
 	}
 
-
-
 }
-ArithmeticTest.init();
+ 
 ArithmeticTest.createJSON();
 ArithmeticTest.showquestion();
