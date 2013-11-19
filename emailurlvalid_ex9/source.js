@@ -1,5 +1,5 @@
 var Validations = {
-
+  
 	init: function() {
 		return Validations.requiredFields() && Validations.checkLimit() && Validations.checkEmail() && Validations.checkUrl();	
 	},
