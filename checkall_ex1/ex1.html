@@ -2,21 +2,57 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="select.js"></script>
   </head>
   <body>
     <h1>Select</h1>
 
-    <div>
-      <input type="checkbox" name="red" class="color"/>red <br>
-      <input type="checkbox" name="green" class="color"/>green <br>
-      <input type="checkbox" name="yellow" class="color"/>yellow <br>
-      <input type="checkbox" name="white" class="color"/>white <br>
-      <input type="checkbox" name="black" class="color"/>black <br><br>
+    <div class="color-options" id="select-color">
+      <dl>
+        <dt>
+          <input type="checkbox" name="red" class="color" id="red"/>
+        </dt>
+        <dd>
+          <label for="red">red</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>
+          <input type="checkbox" name="green" class="color" id="green"/>
+        </dt>
+        <dd>
+          <label for="green">green</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>
+          <input type="checkbox" name="yellow" class="color" id="yellow"/>
+        </dt>
+        <dd>
+          <label for="yellow">yellow</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>
+          <input type="checkbox" name="white" class="color" id="white"/>
+        </dt>
+        <dd>
+          <label for="white">white</label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>
+          <input type="checkbox" name="black" class="color" id="black"/>
+        </dt>
+        <dd>
+          <label for="black">black</label>
+        </dd>
+      </dl>
     </div>
    
-    <a href="javaScript:CheckAllOrNone.check(true)" class="option" />check all<br>
-    <a href="javaScript:CheckAllOrNone.check(false)" class="option" />Uncheck All
-   
-    <script type="text/javascript" src="select.js"></script>
+    <a href="javaScript:CheckAllOrNone.checkUncheck(true, 'select-color')" class="option" />check all <br>
+    <a href="javaScript:CheckAllOrNone.checkUncheck(false, 'select-color')" class="option" />Uncheck All
+
   </body>
 </html>

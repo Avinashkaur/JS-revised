@@ -1,0 +1,3 @@
+.color-options dl { float: left; width: 100%;}
+.color-options dt, dd { float: left;}
+.color-options dd { margin-left: 2px;}
