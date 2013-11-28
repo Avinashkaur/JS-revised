@@ -5,16 +5,18 @@
     
   </head>
   <body>
+    <div class="quiz">
+      <span name = "ques" id = "question" >&nbsp;&nbsp;</span>
+      <input type = "text" name = "result" id = "answer" autofocus = "autofocus" />
+      <input type = "button" id = "nextbutton" value = "Next" />
+      <br />
+      <span id="wrong"></span>
+      <span id="unattempted"></span>
+      <span id="timer" >&nbsp;</span><br /><br />
+      <span id="score"></span>
+      <span id="show"></span> 
+    </div>
     
-    <span name = "ques" id = "question" >&nbsp;&nbsp;</span>
-    <input type = "text" name = "result" id = "answer" autofocus = "autofocus" />
-    <input type = "button" id = "nextbutton" onclick = "ArithmeticTest.submitanswer()" value = "Next" />
-    <br />
-    <span id="wrong"></span>
-    <span id="unattempted"></span>
-    <span id="timer" >&nbsp;</span><br /><br />
-    <span id="score"></span>
-    <span id="show"></span> 
-    <script type="text/javascript" src = "source.js"> </script>  
+    <script type="text/javascript" src = "arithmeticTest.js"> </script>  
   </body>
 </html>
