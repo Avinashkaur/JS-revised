@@ -5,8 +5,8 @@ var CheckAllOrNone = function(div_id) {
 CheckAllOrNone.prototype = {
 
   init: function(div_id) {
-    this.options_div = document.getElementById(div_id);
-    this.checkboxes = this.options_div.getElementsByClassName('color');
+    var options_div = document.getElementById(div_id);
+    this.checkboxes = options_div.getElementsByClassName('color');
   },
   
   setCheckboxStatus: function(value) {
