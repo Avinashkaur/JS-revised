@@ -38,11 +38,11 @@ var Products = {
 
 // shopping cart starts
 
-var ShoppingPortal = function() {
+var ShoppingCart = function() {
   this.init();
 }
 
-ShoppingPortal.prototype = {
+ShoppingCart.prototype = {
 
   init: function() {
     this.items_list = document.getElementById('itemslist');
@@ -231,7 +231,7 @@ ShoppingPortal.prototype = {
 }
 
 window.onload = function() {
-  var cart_object = new ShoppingPortal(),
+  var cart_object = new ShoppingCart(),
       products_page = document.getElementById('items'),
       cart_page = document.getElementById('cart-section'),
       products_tab = document.getElementById('product_link'),
