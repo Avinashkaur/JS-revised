@@ -2,9 +2,9 @@
 
 * { margin: 0px;padding: 0px; }
 ul { list-style-type: none; }
-body {font: 15px Tahoma;}
-.textboxes {border: solid 1px #747462;}
-.buttons {background-color: white;color: #747462;border: solid 1px #747462;padding: 2px 20px;}
+body { font: 15px Tahoma; }
+.textboxes { border: solid 1px #747462; }
+.buttons { background-color: white;color: #747462;border: solid 1px #747462;padding: 2px 20px; }
 
 /*header styles*/
 #header { width:1024px;height: 40px;position:relative;margin: 1px auto;background-color: #e5e5e3;border: solid 1px #747462; }
