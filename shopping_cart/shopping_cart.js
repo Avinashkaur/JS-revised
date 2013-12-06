@@ -35,7 +35,6 @@ var Products = {
   ]
 }
 
-
 // shopping cart starts
 
 var ShoppingCart = function() {
@@ -49,7 +48,6 @@ ShoppingCart.prototype = {
     this.total_items = document.getElementById('numberofitems');
     this.sum_total = document.getElementById('totalprice');
     this.shopped_items = [];
-    this.cart_item = 0;
     this.sum_total.disabled = true;
   },
 
@@ -70,7 +68,7 @@ ShoppingCart.prototype = {
     var items = Products.DETAILS;
     this.items_list.innerHTML = "";
 
-    for ( var i = 0; i < items.length; i++) {
+    for (var i = 0; i < items.length; i++) {
       // creating row and cells for an item
       var new_row = this.createAndAppendElement('li', 'listitem', this.items_list),
           image_cell = this.createAndAppendElement('span', 'imagecell', new_row),
@@ -93,11 +91,9 @@ ShoppingCart.prototype = {
       this.createAndAppendElement('span', '', quantity_cell).innerText = "Quantity";
       var quantity_box = this.createAndAppendElement('input', 'quantitybox', quantity_cell);
       quantity_box.type = 'text';
-      // quantity_box.value = items[i].quantity;
       quantity_box.id = 'i' + i;
       quantity_box.value = 1;
       quantity_box.name = i;
-      quantity_box.onchange = function() { this_object.changeQuantity(this);} 
 
       // for add to cart button cell
       var number_of_item = quantity_box.value;
@@ -115,24 +111,24 @@ ShoppingCart.prototype = {
         current_item = Products.DETAILS[item_number];
         number_of_item = document.getElementById('i' + item_number);
     
+    this.changeQuantity(number_of_item);
+
     if (!(Products.DETAILS[item_number].state) && (number_of_item.value > 0)) {
-      this.shopped_items[this.cart_item] = {
+      this.shopped_items[item_number] = {
         "imageurl" : current_item.imageurl,
         "Caption" : current_item.Caption,
         "category" : current_item.category,
         "price" : current_item.price.toFixed(2),
-        "productno" : item_number,
         "quantity" : current_item.quantity,
         "subtotal" : (current_item.quantity * current_item.price)
       }
-      var selected_items = this.shopped_items.length;
+      var selected_items = Object.keys(this.shopped_items).length;
       current_item.state = true;     
       this.total_items.innerHTML = selected_items;
-      this.cart_item++;
     } 
     else if (number_of_item.value > 0) {
-      for (var i = 0; i < this.shopped_items.length; i++) {
-        if (this.shopped_items[i].productno == item_number) {
+      for (var i in this.shopped_items) {
+        if (i == item_number) {
           this.shopped_items[i].quantity = parseInt(this.shopped_items[i].quantity) + parseInt(current_item.quantity);
           this.shopped_items[i].subtotal = (this.shopped_items[i].quantity * this.shopped_items[i].price).toFixed(2);
         }
@@ -155,8 +151,7 @@ ShoppingCart.prototype = {
     
     cart.innerHTML = "";
 
-    for (var i = 0; i < this.shopped_items.length; i++) {
-
+    for (var key in this.shopped_items) {
       // creating row and cells for a shopped item
       var shopped_item = this.createAndAppendElement('li', 'showListItem', cart),
           product_cell = this.createAndAppendElement('span', 'showProductCell', shopped_item),
@@ -167,24 +162,24 @@ ShoppingCart.prototype = {
       
       // creating elements for cells in a row
 
-      this.createAndAppendElement('img', 'showImage', product_cell).setAttribute('src', this.shopped_items[i].imageurl);
-      this.createAndAppendElement('span', 'showCaption', product_cell).innerText = this.shopped_items[i].Caption;
+      this.createAndAppendElement('img', 'showImage', product_cell).setAttribute('src', this.shopped_items[key].imageurl);
+      this.createAndAppendElement('span', 'showCaption', product_cell).innerText = this.shopped_items[key].Caption;
       
-      this.createAndAppendElement('span', '', price_cell).innerText = this.shopped_items[i].price;
+      this.createAndAppendElement('span', '', price_cell).innerText = this.shopped_items[key].price;
 
       var item_quantity = this.createAndAppendElement('input', 'showQuantity', quantity_cell);
       item_quantity.type = 'text';
-      item_quantity.id = i;
-      item_quantity.value = this.shopped_items[i].quantity;
+      item_quantity.id = key;
+      item_quantity.value = this.shopped_items[key].quantity;
       item_quantity.onchange = function() { this_object.updateCart(this) };
       
-      this.createAndAppendElement('span', '', subtotal_cell).innerText = this.shopped_items[i].subtotal;
+      this.createAndAppendElement('span', '', subtotal_cell).innerText = this.shopped_items[key].subtotal;
 
       var remove_button = this.createAndAppendElement('input', '', remove_button_cell);
       remove_button.type = 'button';
       remove_button.value = 'Remove';
-      remove_button.setAttribute('row' , i);
-      remove_button.onclick = function() { this_object.removeItem(this)};
+      remove_button.setAttribute('row' , key);
+      remove_button.onclick = function() { this_object.removeItem(this) };
     }
   },
 
@@ -208,22 +203,22 @@ ShoppingCart.prototype = {
     
     selected_row.parentNode.removeChild(selected_row);
 
-    for (var i = 0; i < this.shopped_items.length; i++) {
-      if(this.shopped_items[i].imageurl.match(selected_attribute)) {
-        updated_state = this.shopped_items[i].productno;
-        this.shopped_items.splice(i , 1);
+    for (var key in this.shopped_items) {
+      if (this.shopped_items[key].imageurl.match(selected_attribute)) {
+        updated_state = key;
+        delete this.shopped_items[key];
       }
     }
     Products.DETAILS[updated_state].state = false;
-    this.total_items.innerText = this.shopped_items.length;
+    this.total_items.innerText = Object.keys(this.shopped_items).length;
     this.displayTotal();
-    this.cart_item--;
+  
   },
 
   displayTotal: function() {
     var sum = 0;
-    for (var i = 0; i < this.shopped_items.length; i++) {
-      sum = sum + parseFloat(this.shopped_items[i].subtotal, 10);
+    for (var key in this.shopped_items) {
+      sum = sum + parseFloat(this.shopped_items[key].subtotal, 10);
     }
     this.sum_total.value = sum.toFixed(2);
   }
