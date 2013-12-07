@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
+	<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" type="text/css" href="shopping_cart.css">
     <script type="text/javascript" src="shopping_cart.js"></script>
   </head>
   <body>
-    <div id="header">
-      <ul id="header_list">
-        <li class="tab_links">
-          <a id="product_link" href="javaScript:">Products</a>
-        </li>
-        <li class="tab_links">
-          <a id="cart_link" href="javaScript:">My Cart(<label id="numberofitems">0</label>)</a>
-        </li>
-      </ul>
-    </div>
+    <div id="wrapper">
+      <div id="header">
+        <ul id="header_list">
+          <li class="tab_links">
+            <a id="product_link" href="javaScript:">Products</a>
+          </li>
+          <li class="tab_links">
+            <a id="cart_link" href="javaScript:">
+              My Cart(<label id="number-of-items">0</label>)
+            </a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="content_page">
       <div id="search_options"> <!--tag for search options-->
         <span class="labels">Search:</span>&nbsp;
         <input type="text" class="textboxes" />&nbsp;
@@ -32,29 +35,32 @@
           <option>Cameras</option>
         </select>
       </div>
-      <div id="items">
-        <ul id="itemslist">
+
+      <div id="products-display">
+        <ul id="products-list">
         </ul>
       </div>
-    </div>
 
-    <div class="content_page" id="cart-section">
-      <ul id="cartheadings">
-        <li>
-          <span class="big">Products</span>
-          <span>Price</span>
-          <span>Quantity</span>
-          <span>Subtotal</span>
-        </li>
-      </ul>
-      <ul id="cart">
-      </ul>
-    </div>
+      <div id="cart-display">
+        <ul id="cart-headings">
+          <li>
+            <span class="show-product-cell">Products</span>
+            <span class="show-price-cell">Price</span>
+            <span class="show-quantity-cell">Quantity</span>
+            <span class="show-subtotal-cell">Subtotal</span>
+            <span>&nbsp;</span>
+          </li>
+        </ul>
+        <ul id="cart-list">
+        </ul>
+      </div>
 
-    <div id="footer">
-      <input type="button" value="Checkout" id="outButton" />
-      <input type="text" id="totalprice" value='0'/>&nbsp;&nbsp;
-      <label id="total_name" >Total:</label>&nbsp;
+
+      <div class="footer">
+        <input type="button" value="Checkout" />
+        <input type="text" id="total-amount" value='0'/>&nbsp;&nbsp;
+        <label id="total-name" >Total:</label>&nbsp;
+      </div>
     </div>
 
   </body>

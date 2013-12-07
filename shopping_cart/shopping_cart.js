@@ -1,238 +1,237 @@
-// All products json
+// products json
 var Products = {
-  
-  DETAILS: [ 
-    { 
-      "imageurl" : "images/1.jpg", 
-      "Caption" : "Apple MacBook Pro MA464LL/A 15.4 Notebook PC",
+
+  DETAILS: {
+    "0" : {
+      "imageurl" : "images/1.jpg",
+      "caption" : "Apple MacBook Pro MA464LL/A 15.4 Notebook PC",
       "category" : "Category: Computers",
-      "quantity" : 1,
-      "Description" : "The Intel Core Duo powering MacBook Pro is actually two processors built into a single chip.",
-      "price" : 2299.99,
-      "subtotal" : 0.00,
-      "state" : false
-    }, 
-    { 
-      "imageurl" : "images/2.jpg",
-      "Caption" : "Sony VAIO 11.1", 
-      "category" : "Category: Computers",
-      "quantity" : 1,
-      "Description" : "Weighing in at just an amazing 2.84 pounds and offering a sleek, durable carbon-fibre case in charcoal black. And with 4 to 10 hours of standard battery life, it has the stamina to power you through your most demanding applications", 
-      "price" : 2699.99,
-      "subtotal" : 0.00,
-      "state" : false
+      "description" : "The Intel Core Duo powering MacBook Pro is actually two processors built into a single chip.",
+      "price" : 2299.99
     },
-    { 
-      "imageurl" : "images/3.jpg", 
-      "Caption" : "Canon Digital Rebel XT 8MP Digital SLR Camera",
-      "category" : "Category: Cameras", 
-      "quantity" : 1,
-      "Description" : "Canon EOS Digital Rebel XT SLR adds resolution, speed, extra creative control, and enhanced comfort in the hand to one of the smallest and lightest digital cameras in its class", 
-      "price" : 550.00,
-      "subtotal" : 0.00,
-      "state" : false
+    "1" : {
+      "imageurl" : "images/2.jpg",
+      "caption" : "Sony VAIO 11.1",
+      "category" : "Category: Computers",
+      "description" : "Weighing in at just an amazing 2.84 pounds and offering a sleek, durable carbon-fibre case in charcoal black. And with 4 to 10 hours of standard battery life, it has the stamina to power you through your most demanding applications",
+      "price" : 2699.99
+    },
+    "2" : {
+      "imageurl" : "images/3.jpg",
+      "caption" : "Canon Digital Rebel XT 8MP Digital SLR Camera",
+      "category" : "Category: Cameras",
+      "description" : "Canon EOS Digital Rebel XT SLR adds resolution, speed, extra creative control, and enhanced comfort in the hand to one of the smallest and lightest digital cameras in its class",
+      "price" : 550.00
     }
-  ]
-}
+  }
+};
+
+var Regex = {
+
+  NUMBER: /^[1-9]\d*$/
+
+};
 
 // shopping cart starts
 
 var ShoppingCart = function() {
   this.init();
-}
+};
 
 ShoppingCart.prototype = {
 
   init: function() {
-    this.items_list = document.getElementById('itemslist');
-    this.total_items = document.getElementById('numberofitems');
-    this.sum_total = document.getElementById('totalprice');
-    this.shopped_items = [];
-    this.sum_total.disabled = true;
+    this.items_list = document.getElementById('products-list');
+    this.shopped_items = {};
+    this.total_items = document.getElementById('number-of-items');
+    this.cart = document.getElementById('cart-list');
+
+    // invoke methods
+    this.createProductsToShow();
   },
 
-  showAndHideSection: function(hidden_section, visible_section) {
-    hidden_section.style.display = "none";
-    visible_section.style.display = "block";
-    this.showProducts();
+  showAndHideSection: function(section_to_hide, section_to_show) {
+    section_to_hide.style.display = "none";
+    section_to_show.style.display = "block";
   },
 
-  createAndAppendElement: function(element_type, class_name, parent_element) {
+  createAndAppendElement: function(element_type, parent_element, attributes_object) {
+    attributes_object = attributes_object || {};
     var element = document.createElement(element_type);
-    element.setAttribute('class', class_name);  
+
     parent_element.appendChild(element);
+    for (var attr in attributes_object) {
+      element.setAttribute(attr, attributes_object[attr]);
+    }
     return element;
   },
 
-  showProducts: function() {
-    var items = Products.DETAILS;
-    this.items_list.innerHTML = "";
+  createProductsToShow: function() {
+    var products = Products.DETAILS;
 
-    for (var i = 0; i < items.length; i++) {
-      // creating row and cells for an item
-      var new_row = this.createAndAppendElement('li', 'listitem', this.items_list),
-          image_cell = this.createAndAppendElement('span', 'imagecell', new_row),
-          info_cell = this.createAndAppendElement('span', 'infocell', new_row),
-          quantity_cell = this.createAndAppendElement('span', 'quantitycell', new_row),
-          add_button_cell = this.createAndAppendElement('span', 'addToCartCell', new_row),
-          this_object = this;
-
-      // creating elements for cells in a row
+    for (var key in products) {
+      var new_row = this.createAndAppendElement('li', this.items_list, {'class' : 'list-item'}),
+          image_cell = this.createAndAppendElement('span', new_row, {'class' : 'image-cell'}),
+          info_cell = this.createAndAppendElement('span', new_row, {'class' : 'info-cell'}),
+          quantity_cell = this.createAndAppendElement('span', new_row, {'class' : 'quantity-cell'}),
+          add_button_cell = this.createAndAppendElement('span', new_row, {'class' : 'button-cell'}),
+          this_object = this,
+          quantity_box,
+          add_to_cart_button;
+    
+      // for image cell
+      this.createAndAppendElement('img', image_cell, {'class' : 'prod-image', 'src' : products[key].imageurl});
       
-      //for image cell
-      this.createAndAppendElement('img', 'prod_image', image_cell).setAttribute('src', items[i].imageurl);
-      //for product description cell
-      this.createAndAppendElement('span', 'caption_label', info_cell).innerText = items[i].Caption;
-      this.createAndAppendElement('span', 'categorylabel', info_cell).innerText = items[i].category;
-      this.createAndAppendElement('p', 'describe', info_cell).innerText = items[i].Description;
-      this.createAndAppendElement('span', 'pricelabel', info_cell).innerText = "Price:";
-      this.createAndAppendElement('span', 'itemprice', info_cell).innerText = items[i].price;
+      //for product detail cell
+      this.createProductDetailsCell(info_cell, products[key]);
+      
       //for quantity cell
-      this.createAndAppendElement('span', '', quantity_cell).innerText = "Quantity";
-      var quantity_box = this.createAndAppendElement('input', 'quantitybox', quantity_cell);
-      quantity_box.type = 'text';
-      quantity_box.id = 'i' + i;
+      this.createAndAppendElement('span', quantity_cell).innerText = "Quantity";
+      quantity_box = this.createAndAppendElement('input', quantity_cell, {'class' : 'quantity-box', 'type' : 'text', 'id' : 'i' + key, 'value' : 1, "name" : key});
+      
+      //for add to cart button cell
+      add_to_cart_button = this.createAndAppendElement('input', add_button_cell, { 'class' : 'add-to-cart-button', 'type' : 'button', 'value' : 'Add To Cart', 'id' : key});
+      add_to_cart_button.onclick = function() { this_object.checkQuantity(this) }
+    }
+  },
+
+  createProductDetailsCell: function(info_cell, item) {
+    this.createAndAppendElement('span', info_cell, {'class' : 'caption-label'}).innerText = item.caption;
+    this.createAndAppendElement('span', info_cell, {'class' : 'category-label'}).innerText = item.category;
+    this.createAndAppendElement('p', info_cell, {'class' : 'describe'}).innerText = item.description;
+    this.createAndAppendElement('span', info_cell, {'class' : 'price-label'}).innerText = "Price:";
+    this.createAndAppendElement('span', info_cell, {'class' : 'item-price'}).innerText = item.price;   
+  },
+
+  checkQuantity: function(add_button) {
+    var quantity_box = document.getElementById('i' + add_button.id),
+        number_of_items = parseInt(quantity_box.value);
+       
+    if (Regex.NUMBER.test(number_of_items)) {
+      this.addToCart(add_button, number_of_items);
+    }
+    else {  
+      alert("You cannot add zero or invalid quantity!");
+      quantity_box.focus();
       quantity_box.value = 1;
-      quantity_box.name = i;
-
-      // for add to cart button cell
-      var number_of_item = quantity_box.value;
-      var add_to_cart_button = this.createAndAppendElement('input', 'addToCartButton', add_button_cell);
-      add_to_cart_button.type = "button";
-      add_to_cart_button.value = "Add to Cart";
-      add_to_cart_button.id = i;
-      add_to_cart_button.onclick = function(){ this_object.addToCart(this, number_of_item) };
-           
     }
   },
 
-  addToCart: function(add_button) {
-    var item_number = add_button.id,
-        current_item = Products.DETAILS[item_number];
-        number_of_item = document.getElementById('i' + item_number);
-    
-    this.changeQuantity(number_of_item);
+  addToCart: function(add_button, number_of_items) {
+    var item_id = add_button.id,
+        cart_array_length = Object.keys(this.shopped_items).length,
+        cart_row_id = document.getElementById('cart' + item_id);
 
-    if (!(Products.DETAILS[item_number].state) && (number_of_item.value > 0)) {
-      this.shopped_items[item_number] = {
-        "imageurl" : current_item.imageurl,
-        "Caption" : current_item.Caption,
-        "category" : current_item.category,
-        "price" : current_item.price.toFixed(2),
-        "quantity" : current_item.quantity,
-        "subtotal" : (current_item.quantity * current_item.price)
-      }
-      var selected_items = Object.keys(this.shopped_items).length;
-      current_item.state = true;     
-      this.total_items.innerHTML = selected_items;
-    } 
-    else if (number_of_item.value > 0) {
-      for (var i in this.shopped_items) {
-        if (i == item_number) {
-          this.shopped_items[i].quantity = parseInt(this.shopped_items[i].quantity) + parseInt(current_item.quantity);
-          this.shopped_items[i].subtotal = (this.shopped_items[i].quantity * this.shopped_items[i].price).toFixed(2);
-        }
-      }
+    // checks if row with the particular id is present
+    if (cart_row_id) {
+      this.shopped_items[item_id].quantity = this.shopped_items[item_id].quantity + number_of_items;
+      this.shopped_items[item_id].subtotal = this.shopped_items[item_id].quantity * this.shopped_items[item_id].price;
+      this.updateItemQuantityInCart(item_id);   
+    }
+    // if row with given id is not present, new row is created
+    else {
+      this.addNewItemToCart(item_id, number_of_items);
+      this.updateTotalQuantity();
+    }
+    this.updateNetTotal();
+  },
+
+  addNewItemToCart: function(item_id, number_of_items) {
+    // updating cart object 
+    this.shopped_items[item_id] = Products.DETAILS[item_id];
+    this.shopped_items[item_id].quantity = number_of_items;
+    this.shopped_items[item_id].subtotal = this.shopped_items[item_id].quantity * this.shopped_items[item_id].price;
+
+    // creating new product entry in cart to display
+    var shopped_item = this.createAndAppendElement('li', this.cart, {'class' : 'show-list-item', 'id' : 'cart' + item_id}),
+        product_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-product-cell'}),
+        price_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-price-cell'}),
+        quantity_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-quantity-cell'}),
+        subtotal_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-subtotal-cell'}),
+        remove_button_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'remove-bitton-cell'}),
+        this_object = this, remove_button, quantity_box;
+
+    // for product details cell
+    this.createAndAppendElement('img', product_cell, {'class' : 'show-image', 'src' : this.shopped_items[item_id].imageurl});
+    this.createAndAppendElement('span', product_cell, {'class' : 'show-caption'}).innerText = this.shopped_items[item_id].caption;
+    
+    // for price cell
+    this.createAndAppendElement('span', price_cell).innerText = this.shopped_items[item_id].price;
+    
+    // for quantity box cell
+    quantity_box = this.createAndAppendElement('input', quantity_cell, {'class' : 'show-quantity', 'type' : 'text', 'data-id' : item_id, 'id' : 's' + item_id, 'value' : this.shopped_items[item_id].quantity});
+    quantity_box.onchange = function() { this_object.checkQuantityOnChange(this, 'data-id'); }
+    
+    // for subtotal cell
+    this.createAndAppendElement('span', subtotal_cell, {'id' : 'subtotal' + item_id}).innerText = this.shopped_items[item_id].subtotal;
+    
+    // remove button
+    remove_button = this.createAndAppendElement('input', remove_button_cell, {'type' : 'button', 'value' : 'Remove', 'data-row' : item_id});
+    remove_button.onclick = function() { this_object.removeRow(this) };
+  },
+
+  checkQuantityOnChange: function(quantity_box, attribute) {
+    var quantity_box_value = parseInt(quantity_box.value),
+        item_id = quantity_box.getAttribute(attribute);
+
+    if (Regex.NUMBER.test(quantity_box_value)) {
+      this.shopped_items[item_id].quantity = quantity_box_value;
+      this.updateSubtotal(item_id, quantity_box_value);
     }
     else {
-      alert("You can add only a positive number for quantity!");
-      number_of_item.value = 1;     
+      alert("You cannot add an invalid or a 0 value!");
+      quantity_box.value = this.shopped_items[item_id].quantity;
     }
-    this.displayTotal();
+    this.updateNetTotal();
   },
+   
+  updateItemQuantityInCart: function(item_id) {
+    var quantity_box_to_update = document.getElementById('s' + item_id);
 
-  changeQuantity: function(number) {
-    Products.DETAILS[number.name].quantity = number.value;
+    quantity_box_to_update.value = this.shopped_items[item_id].quantity;
+    this.updateSubtotal(item_id, this.shopped_items[item_id].quantity);
   },
-
-  displayCart: function() {
-    var cart = document.getElementById('cart'),
-        this_object = this;
-    
-    cart.innerHTML = "";
-
-    for (var key in this.shopped_items) {
-      // creating row and cells for a shopped item
-      var shopped_item = this.createAndAppendElement('li', 'showListItem', cart),
-          product_cell = this.createAndAppendElement('span', 'showProductCell', shopped_item),
-          price_cell = this.createAndAppendElement('span', 'showPriceCell', shopped_item),
-          quantity_cell = this.createAndAppendElement('span', 'showQuantityCell', shopped_item),
-          subtotal_cell = this.createAndAppendElement('span', 'showSubtotalCell', shopped_item),
-          remove_button_cell = this.createAndAppendElement('span', 'removeButtonCell', shopped_item);
-      
-      // creating elements for cells in a row
-
-      this.createAndAppendElement('img', 'showImage', product_cell).setAttribute('src', this.shopped_items[key].imageurl);
-      this.createAndAppendElement('span', 'showCaption', product_cell).innerText = this.shopped_items[key].Caption;
-      
-      this.createAndAppendElement('span', '', price_cell).innerText = this.shopped_items[key].price;
-
-      var item_quantity = this.createAndAppendElement('input', 'showQuantity', quantity_cell);
-      item_quantity.type = 'text';
-      item_quantity.id = key;
-      item_quantity.value = this.shopped_items[key].quantity;
-      item_quantity.onchange = function() { this_object.updateCart(this) };
-      
-      this.createAndAppendElement('span', '', subtotal_cell).innerText = this.shopped_items[key].subtotal;
-
-      var remove_button = this.createAndAppendElement('input', '', remove_button_cell);
-      remove_button.type = 'button';
-      remove_button.value = 'Remove';
-      remove_button.setAttribute('row' , key);
-      remove_button.onclick = function() { this_object.removeItem(this) };
-    }
-  },
-
-  updateCart: function(new_number) {
-    var new_number_value = parseInt(new_number.value, 10);
-    if (new_number_value > 0) {
-      this.shopped_items[new_number.id].quantity = new_number_value;
-      this.shopped_items[new_number.id].subtotal = (this.shopped_items[new_number.id].quantity * this.shopped_items[new_number.id].price).toFixed(2);
-    }
-    else {
-      alert("You cannot enter quantity less than 1");
-    }
-    this.displayCart();
-    this.displayTotal();
-  },
-
-  removeItem: function(row) {
-    var selected_row = row.parentNode.parentNode,
-        updated_state,
-        selected_attribute = row.parentNode.parentNode.childNodes[0].childNodes[0].getAttribute("src");
-    
-    selected_row.parentNode.removeChild(selected_row);
-
-    for (var key in this.shopped_items) {
-      if (this.shopped_items[key].imageurl.match(selected_attribute)) {
-        updated_state = key;
-        delete this.shopped_items[key];
-      }
-    }
-    Products.DETAILS[updated_state].state = false;
-    this.total_items.innerText = Object.keys(this.shopped_items).length;
-    this.displayTotal();
   
+  updateTotalQuantity: function() {
+    this.total_items.innerText = Object.keys(this.shopped_items).length;
   },
 
-  displayTotal: function() {
-    var sum = 0;
-    for (var key in this.shopped_items) {
-      sum = sum + parseFloat(this.shopped_items[key].subtotal, 10);
-    }
-    this.sum_total.value = sum.toFixed(2);
-  }
+  updateSubtotal: function(item_id, number_of_items) {
+    var subtotal_span = document.getElementById('subtotal' + item_id);
 
+    this.shopped_items[item_id].subtotal = number_of_items * this.shopped_items[item_id].price;
+    subtotal_span.innerText = this.shopped_items[item_id].subtotal
+  },
+
+  updateNetTotal: function() {
+    var sum = 0,
+        net_total_box = document.getElementById('total-amount');
+
+    for (var key in this.shopped_items) {
+      sum = sum + this.shopped_items[key].subtotal;
+    }
+    net_total_box.value = sum.toFixed(2);
+  },
+
+  removeRow: function(element) {
+    var attribute = element.getAttribute('data-row');
+    var row_to_remove = document.getElementById('cart' + attribute);
+
+    delete this.shopped_items[attribute];
+    row_to_remove.parentNode.removeChild(row_to_remove);
+
+    this.updateNetTotal();
+    this.updateTotalQuantity();
+  }
+  
 }
 
 window.onload = function() {
   var cart_object = new ShoppingCart(),
-      products_page = document.getElementById('items'),
-      cart_page = document.getElementById('cart-section'),
+      products_page = document.getElementById('products-display'),
+      cart_page = document.getElementById('cart-display'),
       products_tab = document.getElementById('product_link'),
       cart_tab = document.getElementById('cart_link'); 
-
-  cart_object.showAndHideSection(cart_page, products_page);
 
   products_tab.addEventListener('click', function() {
     cart_object.showAndHideSection(cart_page, products_page);
@@ -240,7 +239,6 @@ window.onload = function() {
 
   cart_tab.addEventListener('click', function() {
     cart_object.showAndHideSection(products_page, cart_page);
-    cart_object.displayCart();
   }, false);
 
 }
