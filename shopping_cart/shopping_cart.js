@@ -228,8 +228,8 @@ ShoppingCart.prototype = {
   },
 
   removeRow: function(element) {
-    var item_id = element.getAttribute('data-row');
-    var row_to_remove = document.getElementById('cart' + item_id);
+    var item_id = element.getAttribute('data-row'),
+        row_to_remove = document.getElementById('cart' + item_id);
 
     delete this.shopped_items[item_id];
     document.getElementById('cart-list').removeChild(row_to_remove);
