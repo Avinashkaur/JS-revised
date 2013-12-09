@@ -40,6 +40,8 @@ var ShoppingCart = function() {
 
 ShoppingCart.prototype = {
 
+  DEFAULT_QUANTITY: 1,
+
   init: function() {
     this.items_list = document.getElementById('products-list');
     this.shopped_items = {};
@@ -70,50 +72,49 @@ ShoppingCart.prototype = {
     var products = Products.DETAILS;
 
     for (var key in products) {
-      var new_row = this.createAndAppendElement('li', this.items_list, {'class' : 'list-item'}),
-          image_cell = this.createAndAppendElement('span', new_row, {'class' : 'image-cell'}),
-          info_cell = this.createAndAppendElement('span', new_row, {'class' : 'info-cell'}),
-          quantity_cell = this.createAndAppendElement('span', new_row, {'class' : 'quantity-cell'}),
-          add_button_cell = this.createAndAppendElement('span', new_row, {'class' : 'button-cell'}),
+      var new_row = this.createAndAppendElement('li', this.items_list, { 'class' : 'list-item' }),
+          image_cell = this.createAndAppendElement('span', new_row, { 'class' : 'image-cell' }),
+          info_cell = this.createAndAppendElement('span', new_row, { 'class' : 'info-cell' }),
+          quantity_cell = this.createAndAppendElement('span', new_row, { 'class' : 'quantity-cell' }),
+          add_button_cell = this.createAndAppendElement('span', new_row, { 'class' : 'button-cell' }),
           this_object = this,
           quantity_box,
           add_to_cart_button;
     
       // for image cell
-      this.createAndAppendElement('img', image_cell, {'class' : 'prod-image', 'src' : products[key].imageurl});
+      this.createAndAppendElement('img', image_cell, { 'class' : 'prod-image', 'src' : products[key].imageurl });
       
       //for product detail cell
       this.createProductDetailsCell(info_cell, products[key]);
       
       //for quantity cell
       this.createAndAppendElement('span', quantity_cell).innerText = "Quantity";
-      quantity_box = this.createAndAppendElement('input', quantity_cell, {'class' : 'quantity-box', 'type' : 'text', 'id' : 'i' + key, 'value' : 1, "name" : key});
+      quantity_box = this.createAndAppendElement('input', quantity_cell, { 'class' : 'quantity-box', 'type' : 'text', 'id' : 'i' + key, 'value' : 1, "name" : key });
       
       //for add to cart button cell
-      add_to_cart_button = this.createAndAppendElement('input', add_button_cell, { 'class' : 'add-to-cart-button', 'type' : 'button', 'value' : 'Add To Cart', 'id' : key});
+      add_to_cart_button = this.createAndAppendElement('input', add_button_cell, { 'class' : 'add-to-cart-button', 'type' : 'button', 'value' : 'Add To Cart', 'id' : key });
       add_to_cart_button.onclick = function() { this_object.checkQuantity(this) }
     }
   },
 
   createProductDetailsCell: function(info_cell, item) {
-    this.createAndAppendElement('span', info_cell, {'class' : 'caption-label'}).innerText = item.caption;
-    this.createAndAppendElement('span', info_cell, {'class' : 'category-label'}).innerText = item.category;
-    this.createAndAppendElement('p', info_cell, {'class' : 'describe'}).innerText = item.description;
-    this.createAndAppendElement('span', info_cell, {'class' : 'price-label'}).innerText = "Price:";
-    this.createAndAppendElement('span', info_cell, {'class' : 'item-price'}).innerText = item.price;   
+    this.createAndAppendElement('span', info_cell, { 'class' : 'caption-label' }).innerText = item.caption;
+    this.createAndAppendElement('span', info_cell, { 'class' : 'category-label' }).innerText = item.category;
+    this.createAndAppendElement('p', info_cell, { 'class' : 'describe' }).innerText = item.description;
+    this.createAndAppendElement('span', info_cell, { 'class' : 'price-label' }).innerText = "Price:";
+    this.createAndAppendElement('span', info_cell, { 'class' : 'item-price' }).innerText = item.price;   
   },
 
   checkQuantity: function(add_button) {
     var quantity_box = document.getElementById('i' + add_button.id),
-        number_of_items = parseInt(quantity_box.value);
+        number_of_items = parseFloat(quantity_box.value, 10);
        
-    if (Regex.NUMBER.test(number_of_items)) {
+    // if (Regex.NUMBER.test(number_of_items)) {
+    if (isNaN(parseInt(number_of_items))) {
       this.addToCart(add_button, number_of_items);
     }
-    else {  
-      alert("You cannot add zero or invalid quantity!");
-      quantity_box.focus();
-      quantity_box.value = 1;
+    else {
+      this.alertForWrongInputQuantityAndSetDefaultValue(quantity_box, this.DEFAULT_QUANTITY);
     }
   },
 
@@ -143,46 +144,52 @@ ShoppingCart.prototype = {
     this.shopped_items[item_id].subtotal = this.shopped_items[item_id].quantity * this.shopped_items[item_id].price;
 
     // creating new product entry in cart to display
-    var shopped_item = this.createAndAppendElement('li', this.cart, {'class' : 'show-list-item', 'id' : 'cart' + item_id}),
-        product_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-product-cell'}),
-        price_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-price-cell'}),
-        quantity_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-quantity-cell'}),
-        subtotal_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'show-subtotal-cell'}),
-        remove_button_cell = this.createAndAppendElement('span', shopped_item, {'class' : 'remove-bitton-cell'}),
+    var shopped_item = this.createAndAppendElement('li', this.cart, { 'class' : 'show-list-item', 'id' : 'cart' + item_id }),
+        product_cell = this.createAndAppendElement('span', shopped_item, { 'class' : 'show-product-cell' }),
+        price_cell = this.createAndAppendElement('span', shopped_item, { 'class' : 'show-price-cell' }),
+        quantity_cell = this.createAndAppendElement('span', shopped_item, { 'class' : 'show-quantity-cell' }),
+        subtotal_cell = this.createAndAppendElement('span', shopped_item, { 'class' : 'show-subtotal-cell' }),
+        remove_button_cell = this.createAndAppendElement('span', shopped_item, { 'class' : 'remove-bitton-cell' }),
         this_object = this, remove_button, quantity_box;
 
     // for product details cell
-    this.createAndAppendElement('img', product_cell, {'class' : 'show-image', 'src' : this.shopped_items[item_id].imageurl});
-    this.createAndAppendElement('span', product_cell, {'class' : 'show-caption'}).innerText = this.shopped_items[item_id].caption;
+    this.createAndAppendElement('img', product_cell, { 'class' : 'show-image', 'src' : this.shopped_items[item_id].imageurl });
+    this.createAndAppendElement('span', product_cell, { 'class' : 'show-caption' }).innerText = this.shopped_items[item_id].caption;
     
     // for price cell
     this.createAndAppendElement('span', price_cell).innerText = this.shopped_items[item_id].price;
     
     // for quantity box cell
-    quantity_box = this.createAndAppendElement('input', quantity_cell, {'class' : 'show-quantity', 'type' : 'text', 'data-id' : item_id, 'id' : 's' + item_id, 'value' : this.shopped_items[item_id].quantity});
+    quantity_box = this.createAndAppendElement('input', quantity_cell, { 'class' : 'show-quantity', 'type' : 'text', 'data-id' : item_id, 'id' : 's' + item_id, 'value' : this.shopped_items[item_id].quantity });
     quantity_box.onchange = function() { this_object.checkQuantityOnChange(this, 'data-id'); }
     
     // for subtotal cell
-    this.createAndAppendElement('span', subtotal_cell, {'id' : 'subtotal' + item_id}).innerText = this.shopped_items[item_id].subtotal;
+    this.createAndAppendElement('span', subtotal_cell, { 'id' : 'subtotal' + item_id }).innerText = this.shopped_items[item_id].subtotal.toFixed(2);
     
     // remove button
-    remove_button = this.createAndAppendElement('input', remove_button_cell, {'type' : 'button', 'value' : 'Remove', 'data-row' : item_id});
-    remove_button.onclick = function() { this_object.removeRow(this) };
+    remove_button = this.createAndAppendElement('input', remove_button_cell, { 'type' : 'button', 'value' : 'Remove', 'data-row' : item_id });
+    remove_button.onclick = function() { this_object.confirmToRemoveRow(this) };
   },
 
   checkQuantityOnChange: function(quantity_box, attribute) {
-    var quantity_box_value = parseInt(quantity_box.value),
+    var quantity_box_value = parseFloat(quantity_box.value, 10),
         item_id = quantity_box.getAttribute(attribute);
 
-    if (Regex.NUMBER.test(quantity_box_value)) {
+    // if (Regex.NUMBER.test(quantity_box_value)) {
+    if (isNaN(parseInt(quantity_box_value))) {
       this.shopped_items[item_id].quantity = quantity_box_value;
       this.updateSubtotal(item_id, quantity_box_value);
     }
     else {
-      alert("You cannot add an invalid or a 0 value!");
-      quantity_box.value = this.shopped_items[item_id].quantity;
+      this.alertForWrongInputQuantityAndSetDefaultValue(quantity_box, this.shopped_items[item_id].quantity);
     }
     this.updateNetTotal();
+  },
+
+  alertForWrongInputQuantityAndSetDefaultValue: function(quantity_box, default_value) {
+    alert("You cannot add zero or invalid quantity!");
+    quantity_box.focus();
+    quantity_box.value = default_value;
   },
    
   updateItemQuantityInCart: function(item_id) {
@@ -200,7 +207,7 @@ ShoppingCart.prototype = {
     var subtotal_span = document.getElementById('subtotal' + item_id);
 
     this.shopped_items[item_id].subtotal = number_of_items * this.shopped_items[item_id].price;
-    subtotal_span.innerText = this.shopped_items[item_id].subtotal
+    subtotal_span.innerText = this.shopped_items[item_id].subtotal.toFixed(2);
   },
 
   updateNetTotal: function() {
@@ -211,6 +218,15 @@ ShoppingCart.prototype = {
       sum = sum + this.shopped_items[key].subtotal;
     }
     net_total_box.value = sum.toFixed(2);
+  },
+
+  confirmToRemoveRow: function(element) {
+    var user_confirmation = confirm('Are you sure you want to remove this item from cart?');
+
+    if (user_confirmation) {
+      this.removeRow(element);
+    }
+
   },
 
   removeRow: function(element) {
@@ -228,17 +244,17 @@ ShoppingCart.prototype = {
 
 window.onload = function() {
   var cart_object = new ShoppingCart(),
-      products_page = document.getElementById('products-display'),
-      cart_page = document.getElementById('cart-display'),
-      products_tab = document.getElementById('product_link'),
-      cart_tab = document.getElementById('cart_link'); 
+      products_tab = document.getElementById('products-display'),
+      cart_tab = document.getElementById('cart-display'),
+      products_link = document.getElementById('product_link'),
+      cart_link = document.getElementById('cart_link'); 
 
-  products_tab.addEventListener('click', function() {
-    cart_object.showAndHideSection(cart_page, products_page);
+  products_link.addEventListener('click', function() {
+    cart_object.showAndHideSection(cart_tab, products_tab);
   }, false);
 
-  cart_tab.addEventListener('click', function() {
-    cart_object.showAndHideSection(products_page, cart_page);
+  cart_link.addEventListener('click', function() {
+    cart_object.showAndHideSection(products_tab, cart_tab);
   }, false);
 
 }

@@ -18,9 +18,9 @@ UserInput.prototype = {
   },
 
   showName: function() {
-    var welcome_message = document.getElementById('message');
+    var welcome_message_element = document.getElementById('message');
     alert('Hello ' + this.first_name + ' ' + this.last_name);
-    welcome_message.innerText = 'Welcome ' + this.first_name + ' ' + this.last_name;
+    welcome_message_element.innerText = 'Welcome ' + this.first_name + ' ' + this.last_name;
   }
   
 }
