@@ -2,21 +2,21 @@
 var Products = {
 
   DETAILS: {
-    "0" : {
+    "1" : {
       "imageurl" : "images/1.jpg",
       "caption" : "Apple MacBook Pro MA464LL/A 15.4 Notebook PC",
       "category" : "Category: Computers",
       "description" : "The Intel Core Duo powering MacBook Pro is actually two processors built into a single chip.",
       "price" : 2299.99
     },
-    "1" : {
+    "2" : {
       "imageurl" : "images/2.jpg",
       "caption" : "Sony VAIO 11.1",
       "category" : "Category: Computers",
       "description" : "Weighing in at just an amazing 2.84 pounds and offering a sleek, durable carbon-fibre case in charcoal black. And with 4 to 10 hours of standard battery life, it has the stamina to power you through your most demanding applications",
       "price" : 2699.99
     },
-    "2" : {
+    "3" : {
       "imageurl" : "images/3.jpg",
       "caption" : "Canon Digital Rebel XT 8MP Digital SLR Camera",
       "category" : "Category: Cameras",
@@ -107,10 +107,9 @@ ShoppingCart.prototype = {
 
   checkQuantity: function(add_button) {
     var quantity_box = document.getElementById('i' + add_button.id),
-        number_of_items = parseFloat(quantity_box.value, 10);
-       
-    // if (Regex.NUMBER.test(number_of_items)) {
-    if (isNaN(parseInt(number_of_items))) {
+        number_of_items = Number(quantity_box.value);
+   
+    if (Regex.NUMBER.test(number_of_items)) {
       this.addToCart(add_button, number_of_items);
     }
     else {
@@ -120,16 +119,14 @@ ShoppingCart.prototype = {
 
   addToCart: function(add_button, number_of_items) {
     var item_id = add_button.id,
-        cart_array_length = Object.keys(this.shopped_items).length,
-        cart_row_id = document.getElementById('cart' + item_id);
-
-    // checks if row with the particular id is present
-    if (cart_row_id) {
+        cart_array_length = Object.keys(this.shopped_items).length;
+    
+    // checks if item is already added to the cart
+    if (this.shopped_items[item_id] != undefined) { 
       this.shopped_items[item_id].quantity = this.shopped_items[item_id].quantity + number_of_items;
-      this.shopped_items[item_id].subtotal = this.shopped_items[item_id].quantity * this.shopped_items[item_id].price;
       this.updateItemQuantityInCart(item_id);   
     }
-    // if row with given id is not present, new row is created
+    // if item is not present, new row is created
     else {
       this.addNewItemToCart(item_id, number_of_items);
       this.updateTotalQuantity();
@@ -172,18 +169,17 @@ ShoppingCart.prototype = {
   },
 
   checkQuantityOnChange: function(quantity_box, attribute) {
-    var quantity_box_value = parseFloat(quantity_box.value, 10),
+    var quantity_box_value = Number(quantity_box.value),
         item_id = quantity_box.getAttribute(attribute);
 
-    // if (Regex.NUMBER.test(quantity_box_value)) {
-    if (isNaN(parseInt(quantity_box_value))) {
+    if (Regex.NUMBER.test(quantity_box_value)) {
       this.shopped_items[item_id].quantity = quantity_box_value;
       this.updateSubtotal(item_id, quantity_box_value);
+      this.updateNetTotal();
     }
     else {
       this.alertForWrongInputQuantityAndSetDefaultValue(quantity_box, this.shopped_items[item_id].quantity);
     }
-    this.updateNetTotal();
   },
 
   alertForWrongInputQuantityAndSetDefaultValue: function(quantity_box, default_value) {
@@ -193,6 +189,8 @@ ShoppingCart.prototype = {
   },
    
   updateItemQuantityInCart: function(item_id) {
+    //if the item is already added to the cart, update only the quantity of the corresponding
+    //item row in cart
     var quantity_box_to_update = document.getElementById('s' + item_id);
 
     quantity_box_to_update.value = this.shopped_items[item_id].quantity;
@@ -230,11 +228,11 @@ ShoppingCart.prototype = {
   },
 
   removeRow: function(element) {
-    var attribute = element.getAttribute('data-row');
-    var row_to_remove = document.getElementById('cart' + attribute);
+    var item_id = element.getAttribute('data-row');
+    var row_to_remove = document.getElementById('cart' + item_id);
 
-    delete this.shopped_items[attribute];
-    row_to_remove.parentNode.removeChild(row_to_remove);
+    delete this.shopped_items[item_id];
+    document.getElementById('cart-list').removeChild(row_to_remove);
 
     this.updateNetTotal();
     this.updateTotalQuantity();
