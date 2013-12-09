@@ -1,6 +1,0 @@
-/*css */
-
-#container {width:300px; height:350px;background-color: #ececec;}
-#container #resultfield {width:200px;height:80px;background-color: #fafad2;margin: 10px 25px;}
-#container .numbers {float:left;width:68px;margin: 2px 1px;height:30px;background-color: white;color:black;padding:3px 4px;}
-#container #zero {width:136px;margin: 2px 1px;height:30px;background-color: white;color:black;float:left;padding:3px 4px;}

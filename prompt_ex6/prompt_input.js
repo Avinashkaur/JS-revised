@@ -1,35 +1,31 @@
-var UserInput = function() {
-  this.init();
+var UserInput = function(first_name, last_name) {
+  this.init(first_name, last_name);
 }
 
 UserInput.prototype = {
 
-  init: function() {
-    this.full_name = "";
+  init: function(first_name, last_name) {
+    this.first_name = this.promptInput(first_name);
+    this.last_name = this.promptInput(last_name);
   },
 
   promptInput: function(property) {
     var name = "";
-
-    while (name.trim().length == 0) {
+    while (name == null || name.trim() == '') {
       name = prompt('Enter your ' + property, '');
-      this.full_name = this.full_name + ' ' + name.trim();
     }
+    return name.trim();
   },
 
   showName: function() {
-    var message = document.getElementById('message');
-
-    alert('Hello' + this.full_name);
-    message.innerText = 'Welcome' + this.full_name;
+    var welcome_message = document.getElementById('message');
+    alert('Hello ' + this.first_name + ' ' + this.last_name);
+    welcome_message.innerText = 'Welcome ' + this.first_name + ' ' + this.last_name;
   }
   
 }
 
 window.onload = function() {
-  var user_input_object = new UserInput();
-
-  user_input_object.promptInput('First Name');
-  user_input_object.promptInput('Last Name');
+  var user_input_object = new UserInput('First name', 'Last Name');
   user_input_object.showName();
 }
