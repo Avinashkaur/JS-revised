@@ -12,22 +12,16 @@ InputAndOpenUrl.prototype = {
   },
 
   inputUrl: function() {
-    var trimmed_url;
 
     do {
-      this.url = prompt('Enter the url', '');
-      trimmed_url = this.getTrimmedUrl();
-      if (trimmed_url) {
+      this.url = prompt('Enter the url', '').trim();
+      if (this.url) {
         this.openUrl();
         break;
       }
       alert("You cannot enter blank url");
-    } while (!trimmed_url);
+    } while (!this.url);
 
-  },
-
-  getTrimmedUrl: function() {
-    return this.url.trim();
   },
 
   openUrl: function() {
