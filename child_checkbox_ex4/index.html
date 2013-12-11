@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="select_child_checkboxes.css">
+    <script type="text/javascript" src="select_child_checkboxes.js"></script>
+  </head>
+  
+  <body>
+    <div id="container">
+      <ul>
+
+        <li>
+          <input type="checkbox" class="parent" id="color" data-property="color-list" />
+          <label for="color">color</label>
+          <ul class="child-list color" id="color-list">
+            <li>
+              <input type="checkbox" class="child" id="color-red" />
+              <label for="color-red">red</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="color-blue" />
+              <label for="color-blue">blue</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="color-white" />
+              <label for="color-white">white</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="color-green" />
+              <label for="color-green">green</label>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <input type="checkbox" class="parent" id="movies" data-property="movies-list" />
+          <label for="movies">movies</label> 
+          <ul class="child-list movies" id="movies-list">
+            <li>
+              <input type="checkbox" class="child" id="movies-dar" />
+              <label for="movies-dar">dar</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="movies-sir"/>
+              <label for="movies-sir">sir</label>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <input type="checkbox" class="parent" id="drinks" data-property="drinks-list" />
+          <label for="drinks">drinks</label>
+          <ul class="child-list drinks" id="drinks-list">
+            <li>
+              <input type="checkbox" class="child" id="drinks-pepsi" />
+              <label for="drinks-pepsi">pepsi</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="drinks-coke" />
+              <label for="drinks-coke">coke</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="drinks-dew" />
+              <label for="drinks-dew">dew</label>
+            </li>
+          </ul> 
+        </li>
+
+        <li>
+          <input type="checkbox" class="parent" id="bikes" data-property="bikes-list" />
+          <label for="bikes">bikes</label> 
+          <ul class="child-list bikes" id="bikes-list">
+            <li>
+              <input type="checkbox" class="child" id="bikes-pulsar" />
+              <label for="bikes-pulsar">bikes</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="bikes-cbz" />
+              <label for="bikes-cbz">CBZ</label>
+            </li>
+            <li>
+              <input type="checkbox" class="child" id="bikes-honda" />
+              <label for="bikes-honda">hero honda</label>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </body>
+</html>
