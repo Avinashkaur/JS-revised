@@ -9,7 +9,7 @@ MoveCountries.prototype = {
   },
 
   getSelectedOptionsAndMove: function(source_list, target_list) {
-    var selected_option, target_node;
+    var selected_option;
 
     while(source_list.selectedIndex != -1) {
       selected_option = source_list.options[source_list.selectedIndex];
