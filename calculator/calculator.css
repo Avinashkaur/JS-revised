@@ -1,0 +1,5 @@
+/*css */
+
+#container { width:300px; height:350px; background-color:#ececec; }
+#container #result-field { width:200px; height:80px; background-color:#fafad2; margin: 10px 25px; }
+#container .buttons { float:left; width:68px; margin:2px 1px; height:30px; background-color:#fff; color:black; padding:3px 4px; }
