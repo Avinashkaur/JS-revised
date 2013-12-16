@@ -1,0 +1,8 @@
+/*styles for autocomplete exercise*/
+
+.highlight { background-color:cyan; }
+.container { position:relative; width:120px; }
+.container input[type=text] { height:24px; font-size:16px; }
+.container #names-list { width:auto; background: #fff; border:solid 1px #aaa; padding:5px 0px 5px 10px; }
+.container #searched-list { display:none; position:absolute; top:48px; left:2px; min-height:0px; overflow-y:scroll; border:solid 1px #ededed; border-top:none; background-color:#fff; padding:5px 0px; width:167px; }
+.container #searched-list li { cursor:pointer; padding:1px 5px; }
