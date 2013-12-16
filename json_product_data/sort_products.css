@@ -1,0 +1,4 @@
+
+.f-left { float:left; }
+#products-display { width:80%; margin-left:18%; }
+#products-display .item-image { max-width:100px; }
