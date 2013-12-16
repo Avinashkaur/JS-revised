@@ -1,8 +1,8 @@
-var DynamicTable = function(count) {
+var DynamicTableRow = function(count) {
   this.init(count);
 }
 
-DynamicTable.prototype = {
+DynamicTableRow.prototype = {
 
   init: function(count) {
     this.data_table = document.getElementById('data-grid').tBodies[0];
@@ -112,7 +112,7 @@ window.onload = function() {
   var count = 0;
 
   add_row_button.addEventListener('click', function() {
-    new DynamicTable(count);
+    new DynamicTableRow(count);
     count++;
   }, false);
 

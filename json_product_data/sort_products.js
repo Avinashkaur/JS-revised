@@ -43,7 +43,6 @@ Store.prototype = {
     }
   },
 
-
   createAndAppendElement: function(element, parent_element, attributes) {
     var new_element = document.createElement(element);
     attributes = attributes || {};
