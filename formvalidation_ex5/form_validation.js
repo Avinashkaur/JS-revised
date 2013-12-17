@@ -42,11 +42,11 @@ Validations.prototype = {
 
   checkValidations: function() {
     var status = false,
-        status1 = this.checkRequiredFields(),
-        status2 = this.checkLimit(),
-        status3 = this.checkNotificationOption();
+        required_status = this.checkRequiredFields(),
+        limit_status = this.checkLimit(),
+        notification_status = this.checkNotificationOption();
 
-    status = status1 && status2 && status3; 
+    status = required_status && limit_status && notification_status;
     return status;
   }
 
