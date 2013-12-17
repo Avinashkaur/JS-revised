@@ -1,14 +1,9 @@
 var Validations = function() {
-  this.init();
 }
 
 Validations.prototype = {
 
-  init: function() {
-    
-  },
-
-  requiredFields: function() {
+  checkRequiredFields: function() {
     var required_elements = document.getElementsByClassName('required');
     var status = true;
     for (var i = 0; i < required_elements.length; i++) {
@@ -46,12 +41,12 @@ Validations.prototype = {
   },
 
   checkValidations: function() {
-    var status = false;
-    
-    status = this.requiredFields() && 
-             this.checkLimit() &&
-             this.checkNotificationOption();
+    var status = false,
+        status1 = this.checkRequiredFields(),
+        status2 = this.checkLimit(),
+        status3 = this.checkNotificationOption();
 
+    status = status1 && status2 && status3; 
     return status;
   }
 
@@ -65,9 +60,4 @@ window.onload = function() {
   user_form.onsubmit = function() {
     return validations_object.checkValidations();
   }
-
-  about_me.addEventListener('change', function() {
-    validations_object.checkLimit();
-  }, false);
-
 }

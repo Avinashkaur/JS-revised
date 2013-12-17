@@ -1,18 +1,14 @@
 var Regex = {
 
-  EMAIL: /^(?:\w+\.?)*\w+@(?:\w+\.?)*\w+$/,
-  URL: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-  
+  EMAIL: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]{2,}(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/,
+  URL: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|www\.)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+
 }
 
 var Validations = function() {
-  this.init();
 }
 
 Validations.prototype = {
-
-  init: function() {  
-  },
 
   checkPattern: function(element, regex) {
     var user_input = element.value.trim(),
@@ -49,5 +45,4 @@ window.onload = function() {
   url_input.onchange = function() {
     validations_object.checkPattern(url_input, Regex.URL);
   }
-
 } 
