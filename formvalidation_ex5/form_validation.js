@@ -1,14 +1,22 @@
 var Validations = function() {
+  this.init();
 }
 
 Validations.prototype = {
 
+  MAX_CHARACTERS: 50,
+
+  init: function() {
+    this.required_elements = document.getElementsByClassName('required');
+    this.about_me_element = document.getElementById('about');
+    this.notification_checkbox = document.getElementById('notify');
+  },
+
   checkRequiredFields: function() {
-    var required_elements = document.getElementsByClassName('required');
     var status = true;
-    for (var i = 0; i < required_elements.length; i++) {
-      if (required_elements[i].value.trim().length == 0) {
-        alert("You cannot have " + required_elements[i].name + " blank.");
+    for (var i = 0; i < this.required_elements.length; i++) {
+      if (this.required_elements[i].value.trim().length == 0) {
+        alert("You cannot have " + this.required_elements[i].name + " blank.");
         status = false;
       }
     }
@@ -16,25 +24,23 @@ Validations.prototype = {
   },
 
   checkLimit: function() {
-    var element = document.getElementById('about'),
-        status = true,
-        number_of_characters = element.value.trim().length;
+    var status = true,
+        number_of_characters = this.about_me_element.value.trim().length;
 
-    if (number_of_characters < 50) {
-      alert("You have to enter minimum of 50 characters!");
-      element.focus();
+    if (number_of_characters < this.MAX_CHARACTERS) {
+      alert("You have to enter minimum of " + this.MAX_CHARACTERS + " characters!");
+      this.about_me_element.focus();
       status = false;
     } 
     return status;
   },
 
   checkNotificationOption: function() {
-    var status = true,
-        notification_checkbox = document.getElementById('notify');
+    var status = true;
     
-    if (!(notification_checkbox.checked)) {
+    if (!(this.notification_checkbox.checked)) {
       alert('Please tick the notification');
-      notification_checkbox.focus();
+      this.notification_checkbox.focus();
       status = false;
     }  
     return status;
