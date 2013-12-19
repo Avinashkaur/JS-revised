@@ -12,36 +12,44 @@ LimitSelectedOptions.prototype = {
     this.uncheck_all_option = uncheck_all_option;
   },
 
-  getCheckedOptions: function(element) {
-    this.uncheck_all_option.checked = false;
-    
+  checkSelectedOptions: function(element) {
+    var value;
+
     if (element.checked) {
-      this.checked_array.push(element.value);
-      this.checkLimitAndAlert(element);
+      this.uncheck_all_option.checked = false;
+      value = this.checkLimitAndAlert();
+      (value) ? this.checked_array.push(element.value) : element.checked = false;
     }
     else {
       this.removeElement(element);
     }
   },
 
-  checkLimitAndAlert: function(element) {
-    if (this.checked_array.length > this.MAXIMUM_OPTIONS) {
-      alert("You cannot check more than " + this.MAXIMUM_OPTIONS + " values. You have already selected " + this.removeElement(element));
-      element.checked = false;
-    }
-
-  },
-
   removeElement: function(element) {
-    var index = this.checked_array.indexOf(element.value);
-    this.checked_array.splice(index, 1);
-    return this.checked_array;
+    //fallback for indexOf in IE
+    if (navigator.appName == 'Microsoft Internet Explorer') {
+      for(i in this.checked_array) {
+        if (this.checked_array[i] == element.value) {
+          this.checked_array.splice(i, 1);
+        }
+      }
+    }
+    else {
+      var index = this.checked_array.indexOf(element.value);
+      this.checked_array.splice(index, 1);
+    }
   },
 
-  uncheckAll: function(options_array) {
-    var options_array_length = options_array.length;
+  checkLimitAndAlert: function() {
+    if (this.checked_array.length == this.MAXIMUM_OPTIONS) {
+      alert("you have already entered " + this.checked_array);
+      return false;
+    }
+    return true;
+  },
 
-    for (var i = 0; i < options_array_length; i++) {
+  uncheckAll: function(options_array) {      
+    for (var i = 0; i < options_array.length; i++) {
       options_array[i].checked = false;
     }
     this.checked_array = [];
@@ -62,7 +70,7 @@ window.onload = function() {
 
   for (var i = 0; i < options_array.length; i++) {
     options_array[i].addEventListener('click', function() {
-      selection_object.getCheckedOptions(this);
+      selection_object.checkSelectedOptions(this);
     }, false);
   }
 }
