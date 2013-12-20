@@ -1,6 +1,6 @@
 /*styles for autocomplete exercise*/
 
-.highlight { background-color:cyan; }
+.highlight { background-color:#ededed; }
 .container { position:relative; width:120px; }
 .container input[type=text] { height:24px; font-size:16px; }
 .container #names-list { width:auto; background: #fff; border:solid 1px #aaa; padding:5px 0px 5px 10px; }

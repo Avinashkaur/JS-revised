@@ -39,24 +39,32 @@ AutoComplete.prototype = {
     this.searched_data_box = searched_list;
   },
   
-  searchNames: function(key) {
+  searchAndDisplayNames: function(key) {
     var data_to_search = this.input_box.value.trim(),
         search_query = new RegExp(data_to_search, 'i'),
-        names = UserData.NAMES,
-        searched_list = [];
+        search_results = [];
 
     this.searched_data_box.innerHTML = "";
 
-    for (var i = 0; i < names.length; i++) {
+    for (var i = 0; i < UserData.NAMES.length; i++) {
       // if the characters entered by the user matches the user names provided
-      if (search_query.test(names[i][key])) {
-        searched_list.push(names[i][key]);
+      if (search_query.test(UserData.NAMES[i][key])) {
+        search_results.push(UserData.NAMES[i][key]);
       }
     }
   
     // if searched_list is populated with names, we create the list else show 'no results' message
-    (searched_list.length) ? this.createSearchedList(searched_list) : this.noSearchResults();
+    (search_results.length) ? this.createSearchedList(search_results) : this.noSearchResults();
     
+  },
+
+  showAllNames: function() {
+    var names_array = [];
+
+    for (var i in UserData.NAMES) {
+      names_array.push(UserData.NAMES[i].name);
+    }
+    this.createSearchedList(names_array);
   },
 
   createSearchedList: function(searched_list) {
@@ -75,29 +83,17 @@ AutoComplete.prototype = {
 
     li.setAttribute('class', 'searched-child');
     li.innerText = value;
-    li.onmousedown = function() {  this_object.onMouseDown(this); };
-    li.onmouseover = function() {  this_object.onMouseOver(this); };
-    li.onmouseout = function() {  this_object.onMouseOut(this); };
+    li.onmousedown = function() {  this_object.input_box.value = this.innerHTML; };
+    li.onmouseover = function() {  this.className = this.className + ' highlight'; };
+    li.onmouseout = function() {  this.className = this.className.replace(/\bhighlight\b/,''); };
     return li;
-  },
-
-  onMouseOver: function(element) {
-    element.className = element.className + ' highlight';
-  },
-
-  onMouseOut: function(element) {
-    element.className = element.className.replace(/\bhighlight\b/,'');
-  },
-
-  onMouseDown: function(element) {
-    this.input_box.value = element.innerHTML;
   },
   
   noSearchResults: function() {
-    this.searched_data_box.innerHTML = this.NO_RESULT_TEXT;
+    this.searched_data_box.innerText = this.NO_RESULT_TEXT;
   },
 
-  listBlur: function() {
+  hideList: function() {
     this.searched_data_box.style.display = 'none';
   },
 
@@ -113,15 +109,21 @@ window.onload = function() {
       autocomplete_object = new AutoComplete(search_box, searched_list);
   
   search_box.onkeyup = function() {
-    if (search_box.value.trim().length != 0) {
-      autocomplete_object.searchNames('name');
+    if (search_box.value.match(/^\s+$/)) {
+      autocomplete_object.noSearchResults();
+      autocomplete_object.showList();
+    }
+    else if (search_box.value.trim().length != 0) {
+      autocomplete_object.searchAndDisplayNames('name');
     }
     else {
+      searched_list.innerHTML = "";
+      autocomplete_object.showAllNames();
       autocomplete_object.showList();
     }  
   }
 
   search_box.onblur = function() {
-    autocomplete_object.listBlur();
+    autocomplete_object.hideList();
   }
 }

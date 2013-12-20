@@ -43,6 +43,7 @@ Store.prototype = {
     }
   },
 
+  
   createAndAppendElement: function(element, parent_element, attributes) {
     var new_element = document.createElement(element);
     attributes = attributes || {};
@@ -61,6 +62,7 @@ Store.prototype = {
       if (a[property] > b[property])
         return 1;
       return 0;
+      // return a[property] - b[property];
     }
     this.showProducts(this.products.sort(compare));
   }
