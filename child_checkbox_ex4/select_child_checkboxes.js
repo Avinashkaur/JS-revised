@@ -1,69 +1,99 @@
-var SelectChildBoxes = function() {
-  this.init();
-}
+// to uncheck and hide all the lists on page load
+var SetValueForAllLists = {
 
-SelectChildBoxes.prototype = {
+  init: function(checkboxes, child_lists) {
+    this.checkboxes = checkboxes;
+    this.child_lists = child_lists;
 
-  init: function() {
-    this.hideChildList('child-list');
+    // invoke methods
+    SetValueForAllLists.uncheckParentCheckboxes();
+    SetValueForAllLists.hide();
   },
 
-  hideChildList: function(element_class) {
-    var child_lists = document.getElementsByClassName(element_class);
-
-    for (var i = 0; i < child_lists.length; i++) {
-      child_lists[i].style.display = 'none';
-      // setting the checked state of the corresponding checkbox to false 
-      document.querySelector("[data-property='" + child_lists[i].id + "']").checked = false;
+  uncheckParentCheckboxes: function() {
+    for (var i = 0; i < this.checkboxes.length; i++) {
+      this.checkboxes[i].checked = false;
     }
   },
 
-  showChildList: function(element, attribute) {
-    //attribute of the checked checkbox
-    var element_id = element.getAttribute(attribute),
-    // getting that element that has the same value of id as the attribute of the checkbox
-        list_to_show = document.getElementById(element_id);
-
-    //hiding all the child lists
-    this.hideChildList('child-list');
-    
-    // set checked property of clicked checkbox and show the child list
-    this.checkAndShowParentElement(element, list_to_show)
-    
-    // finally check all the child checkboxs in list
-    this.checkChildElements(list_to_show);
-
-    list_to_show.scrollIntoView(true);
-
-  },
-
-  checkAndShowParentElement: function(parent_element, child_list) {
-    parent_element.checked = true;
-    child_list.style.display = 'block';
-  },
-
-  checkChildElements: function(parent_element) {
-    var child_elements = parent_element.getElementsByClassName('child');
-    
-    for (var i = 0; i < child_elements.length; i++) {
-      child_elements[i].checked = true;
+  hide: function() {
+    for (var i = 0; i < this.child_lists.length; i++) {
+      this.child_lists[i].style.display = 'none';
     }
   }
 
 }
 
-window.onload = function() {
-  var select_object = new SelectChildBoxes();
-      parent_names = document.getElementsByClassName('parent');
+// to set value of other lists other than the checked list
+var SetValueForOtherLists = {
 
-  for (var i = 0; i < parent_names.length; i++) {
-    parent_names[i].addEventListener('click', function() {
-      if (this.checked) {
-        select_object.showChildList(this, 'data-property');
-      }
-      else {
-        select_object.hideChildList('child-list');
-      }
-    }, false);  
+  temp_array: [],
+
+  unCheckAndHideOtherLists: function(parent_checkbox) {
+    var popped_element,
+        list_object = new SelectChildBoxes(parent_checkbox);
+
+    if (SetValueForOtherLists.temp_array.length != 0) {
+      popped_element = SetValueForOtherLists.temp_array.pop();
+    }
+
+    if (popped_element) {
+      popped_element.checked = false;
+      list_object.checkUncheckChildElements(popped_element);
+      list_object.showHideChildElements(popped_element);
+    }
+    SetValueForOtherLists.temp_array.push(parent_checkbox);
+  }
+
+}
+
+var SelectChildBoxes = function(selected_checkbox) {
+  this_object = this;
+
+  selected_checkbox.onclick = function() {
+    if (this.checked) {
+      this_object.checkUncheckChildElements(this);
+      this_object.showHideChildElements(this);
+    }
+    else {
+      this_object.checkUncheckChildElements(this);
+      this_object.showHideChildElements(this);
+    }
+  }
+}
+
+SelectChildBoxes.prototype = {
+
+  checkUncheckChildElements: function(parent_checkbox) {
+    var attribute = parent_checkbox.getAttribute('data-property');
+    var child_list = document.getElementById(attribute);
+    var child_list_elements = child_list.getElementsByClassName('child');
+    
+    for (var i = 0; i < child_list_elements.length; i++) {
+      child_list_elements[i].checked = parent_checkbox.checked;
+    }
+    if (parent_checkbox.checked) {
+      parent_checkbox.scrollIntoView(true);
+      SetValueForOtherLists.unCheckAndHideOtherLists(parent_checkbox);
+    }    
+  },
+
+  showHideChildElements: function(parent_checkbox) {
+    var attribute = parent_checkbox.getAttribute('data-property');
+    var child_list = document.getElementById(attribute);
+    
+    child_list.style.display = (parent_checkbox.checked) ? "block" : "none";
+  },
+
+}
+
+window.onload = function() {
+  var parent_checkboxes = document.getElementsByClassName('parent'),
+      child_lists = document.getElementsByClassName('child-list');
+  
+  SetValueForAllLists.init(parent_checkboxes, child_lists);
+
+  for (var i = 0; i < parent_checkboxes.length; i++) {
+    var select_object = new SelectChildBoxes(parent_checkboxes[i]);
   }
 }
