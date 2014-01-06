@@ -5,16 +5,12 @@ var Regex = {
 }
 
 var DomainSubdomain = function(input_box) {
-  this.init(input_box);
+  this.displayDomainSubdomain(input_box);
 }
 
 DomainSubdomain.prototype = {
 
-  init: function(input_box) {
-    this.getDomainSubdomain(input_box);
-  },
-
-  getDomainSubdomain: function(element) {
+  displayDomainSubdomain: function(element) {
     var url = element.value.trim()
 
     if (url.match(Regex.URL)) {
@@ -28,12 +24,18 @@ DomainSubdomain.prototype = {
   },
 
   getSubDomain: function() {
-    var trimmed_subdomain =  RegExp.$4.replace(/\.$/, '');
-    return trimmed_subdomain || "No subdomain";
+    var subdomain =  RegExp.$4.replace(/\.$/, '');
+    return subdomain || "";
   },
 
   displayUrlInfo: function() {
-    alert("Subdomain: " + this.subdomain + "\n Domain: " + this.domain);
+    if (this.subdomain.length != 0) {
+      alert("Subdomain: " + this.subdomain + "\n Domain: " + this.domain);
+    }
+    else {
+      alert("Domain: " + this.domain);
+    }
+    
   }
 
 }

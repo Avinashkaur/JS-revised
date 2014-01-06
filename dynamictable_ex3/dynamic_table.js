@@ -48,21 +48,24 @@ var DynamicTable = {
   },
 
   deleteRow: function(row) {
-    this.data_table.removeChild(row);
+    // this.data_table.removeChild(row);
+    // row.remove();
   }
 
 }
 
 var TableRow = function(table) {
-  this_object = this;
+  // this_object = this;
   this.table = table;
+  this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
+  this.createCells();
 }
-
+// constructor to create row object and createCells 
 TableRow.prototype = {
 
-  create: function(row_id) {
-    this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
-    this.createCells();
+  create: function(row_id) {//class method that will create new object
+    // this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
+    // this.createCells();
   },
 
   createCells: function() {
@@ -93,7 +96,6 @@ TableRow.prototype = {
       var email_field_status = Validations.checkEmail(this_object.input_email);
       if (required_fields_status && email_field_status) {
         this_object.save();
-        this_object.updateValue();
       }
       
     }
@@ -110,8 +112,9 @@ TableRow.prototype = {
       this_object.delete();
     }
   },
-
+  //show and hide elements in arrays
   save: function() {
+    this_object.updateValue();
     this.hideAndShowElements({ 'show' : [ this.label_name, this.label_email, this.edit_link, this.delete_link ], 'hide' : [ this.input_name, this.input_email, this.save_button ]});
   },
 
@@ -127,7 +130,7 @@ TableRow.prototype = {
     this.label_name.innerText = this.input_name.value;
     this.label_email.innerText = this.input_email.value;
   },
-
+// create separate methods for hide and show
   hideAndShowElements: function(elements_object) {
     for (var key in elements_object) {     
       for (var i = 0; i < elements_object[key].length; i++) {

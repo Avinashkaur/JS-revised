@@ -27,19 +27,15 @@ var UserData = {
 };
 
 var AutoComplete = function(input_box, searched_list) {
-  this.init(input_box, searched_list);
+  this.input_box = input_box;
+  this.searched_data_box = searched_list;
 }
 
 AutoComplete.prototype = {
 
   NO_RESULT_TEXT: "No results found!",
 
-  init: function(input_box, searched_list) {
-    this.input_box = input_box;
-    this.searched_data_box = searched_list;
-  },
-  
-  searchAndDisplayNames: function(key) {
+  searchAndDisplayNames: function() {
     var data_to_search = this.input_box.value.trim(),
         search_query = new RegExp(data_to_search, 'i'),
         search_results = [];
@@ -48,14 +44,14 @@ AutoComplete.prototype = {
 
     for (var i = 0; i < UserData.NAMES.length; i++) {
       // if the characters entered by the user matches the user names provided
-      if (search_query.test(UserData.NAMES[i][key])) {
-        search_results.push(UserData.NAMES[i][key]);
+      if (search_query.test(UserData.NAMES[i]['name'])) {
+        search_results.push(UserData.NAMES[i]['name']);
       }
     }
   
     // if searched_list is populated with names, we create the list else show 'no results' message
     (search_results.length) ? this.createSearchedList(search_results) : this.noSearchResults();
-    
+    this.showList();
   },
 
   showAllNames: function() {
@@ -65,6 +61,7 @@ AutoComplete.prototype = {
       names_array.push(UserData.NAMES[i].name);
     }
     this.createSearchedList(names_array);
+    this.showList();
   },
 
   createSearchedList: function(searched_list) {
@@ -74,7 +71,6 @@ AutoComplete.prototype = {
       list_item = this.createListItem(searched_list[i]);
       this.searched_data_box.appendChild(list_item);
     }
-    this.showList();
   },
 
   createListItem: function(value) {
@@ -111,15 +107,13 @@ window.onload = function() {
   search_box.onkeyup = function() {
     if (search_box.value.match(/^\s+$/)) {
       autocomplete_object.noSearchResults();
-      autocomplete_object.showList();
     }
     else if (search_box.value.trim().length != 0) {
-      autocomplete_object.searchAndDisplayNames('name');
+      autocomplete_object.searchAndDisplayNames();
     }
     else {
       searched_list.innerHTML = "";
       autocomplete_object.showAllNames();
-      autocomplete_object.showList();
     }  
   }
 
