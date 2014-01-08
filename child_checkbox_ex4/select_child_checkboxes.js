@@ -51,14 +51,8 @@ var SelectChildBoxes = function(selected_checkbox) {
   this_object = this;
 
   selected_checkbox.onclick = function() {
-    if (this.checked) {
-      this_object.checkUncheckChildElements(this);
-      this_object.showHideChildElements(this);
-    }
-    else {
-      this_object.checkUncheckChildElements(this);
-      this_object.showHideChildElements(this);
-    }
+    this_object.checkUncheckChildElements(this);
+    this_object.showHideChildElements(this);
   }
 }
 
