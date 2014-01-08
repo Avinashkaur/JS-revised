@@ -1,11 +1,10 @@
 var Regex = {
 
-  URL: /^((https?|ftp):\/\/)?(www\.)?((([A-z0-9]+)\.)*)([A-z0-9]+\.[A-z]{2,4})/
+  URL: /^((https?|ftp):\/\/)?(www\.)?(([A-z0-9]+\.)*)([A-z0-9]+\.[A-z]{2,4})(\/(.)*)?$/
 
 }
 
-var DomainSubdomain = function(input_box) {
-  this.displayDomainSubdomain(input_box);
+var DomainSubdomain = function() {
 }
 
 DomainSubdomain.prototype = {
@@ -14,7 +13,7 @@ DomainSubdomain.prototype = {
     var url = element.value.trim()
 
     if (url.match(Regex.URL)) {
-      this.domain = RegExp.$7;
+      this.domain = RegExp.$6;
       this.subdomain = this.getSubDomain();
       this.displayUrlInfo();
     }
@@ -42,10 +41,11 @@ DomainSubdomain.prototype = {
 
 window.onload = function() {
   var input_box = document.getElementById('url'),
-      user_form = document.getElementById('email-form');
+      user_form = document.getElementById('email-form'),
+      form_object = new DomainSubdomain(input_box);
 
   user_form.onsubmit = function() {
-    new DomainSubdomain(input_box);
+    form_object.displayDomainSubdomain(input_box);
     return false;
   }
 }

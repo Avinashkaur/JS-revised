@@ -32,8 +32,16 @@ Store.prototype = {
 
   init: function() {
     this.products = Products.DETAILS;
+    this_object = this;
+
     this.products_display = document.getElementById('products-display');
+    this.sort_by_options_element = document.getElementById('sort-options');
+    // invoke methods
     this.showProducts(this.products);
+    this.sort_by_options_element.onchange = function() {
+      selected_option =  this.options[this.selectedIndex].getAttribute('data-value');
+      this_object.sortAndDisplayItems(selected_option);
+    }
   },
 
   showProducts: function(items_array) {
@@ -43,7 +51,7 @@ Store.prototype = {
     }
   },
 
-  
+  // attributes are passed as an object where attribute is the 'key' and attribute value is the 'value'
   createAndAppendElement: function(element, parent_element, attributes) {
     var new_element = document.createElement(element);
     attributes = attributes || {};
@@ -56,13 +64,12 @@ Store.prototype = {
   },
 
   sortAndDisplayItems: function(property) {
-    var compare = function(a,b) {
-      if (a[property] < b[property])
+    var compare = function(current, next) {
+      if (current[property] < next[property])
         return -1;
-      if (a[property] > b[property])
+      if (current[property] > next[property])
         return 1;
       return 0;
-      // return a[property] - b[property];
     }
     this.showProducts(this.products.sort(compare));
   }
@@ -70,12 +77,5 @@ Store.prototype = {
 }
 
 window.onload = function() {
-  var store_object = new Store(),
-      sort_by_options_element = document.getElementById('sort-options'),
-      selected_option;
-
-  sort_by_options_element.onchange = function() {
-    selected_option =  this.options[this.selectedIndex].getAttribute('data-value');
-    store_object.sortAndDisplayItems(selected_option);
-  }
+  new Store();
 }
