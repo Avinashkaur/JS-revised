@@ -57,7 +57,6 @@ var TableRow = function(table, row_id) {
   this.table = table;
   this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
   
-  this_object = this;
   this.array_to_display = [ this.label_name, this.label_email, this.edit_link, this.delete_link ];
   this.array_to_edit = [ this.input_name, this.input_email, this.save_button ];
   // invoke methods
