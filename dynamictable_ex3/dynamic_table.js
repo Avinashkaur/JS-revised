@@ -42,32 +42,35 @@ var DynamicTable = {
   }, 
 
   createRow: function() {
-    var new_row = new TableRow(this.data_table);
-    new_row.create(this.row_id);
+    TableRow.create(this.data_table, this.row_id);
     this.row_id++;
   },
 
   deleteRow: function(row) {
-    // this.data_table.removeChild(row);
-    // row.remove();
+    row.remove();
   }
 
 }
 
-var TableRow = function(table) {
-  // this_object = this;
+// constructor for table row class
+var TableRow = function(table, row_id) {
   this.table = table;
   this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
+  
+  this_object = this;
+  this.array_to_display = [ this.label_name, this.label_email, this.edit_link, this.delete_link ];
+  this.array_to_edit = [ this.input_name, this.input_email, this.save_button ];
+  // invoke methods
   this.createCells();
 }
-// constructor to create row object and createCells 
+
+//class method that will create row object
+TableRow.create = function(table, row_id) {
+  new TableRow(table, row_id);
+}
+
 TableRow.prototype = {
-
-  create: function(row_id) {//class method that will create new object
-    // this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
-    // this.createCells();
-  },
-
+  
   createCells: function() {
     this.createNameCell();
     this.createEmailCell();
@@ -91,35 +94,55 @@ TableRow.prototype = {
 
     this.action_cell = this.createAndAppendElement('td', this.row);
     this.save_button = this.createAndAppendElement('input', this.action_cell, { 'type' : 'button', 'value' : 'Save' });
+    
+    this.edit_link = this.createAndAppendElement('a', this.action_cell, { 'href' : 'javaScript:void(0)', 'style' : 'display:none' });
+    this.edit_link.innerText = 'Edit';
+
+    this.delete_link = this.createAndAppendElement('a', this.action_cell, { 'href' : 'javaScript:void(0)', 'style' : 'display:none' });
+    this.delete_link.innerText = 'Delete';
+
+    // saving elements of that we need to hide and show in arrays
+    this.updated_elements_array = [ this.label_name, this.label_email, this.edit_link, this.delete_link ];
+    this.elements_to_update_array = [ this.input_name, this.input_email, this.save_button ];
+
     this.save_button.onclick = function() {
       var required_fields_status = Validations.checkRequiredField(this_object.input_name);
       var email_field_status = Validations.checkEmail(this_object.input_email);
       if (required_fields_status && email_field_status) {
+        this_object.updateValue();
         this_object.save();
       }
-      
     }
     
-    this.edit_link = this.createAndAppendElement('a', this.action_cell, { 'href' : 'javaScript:void(0)', 'style' : 'display:none' });
-    this.edit_link.innerText = 'Edit';
     this.edit_link.onclick = function() {
       this_object.edit();
     }
-
-    this.delete_link = this.createAndAppendElement('a', this.action_cell, { 'href' : 'javaScript:void(0)', 'style' : 'display:none' });
-    this.delete_link.innerText = 'Delete';
+    
     this.delete_link.onclick = function() {
       this_object.delete();
     }
   },
-  //show and hide elements in arrays
+
   save: function() {
-    this_object.updateValue();
-    this.hideAndShowElements({ 'show' : [ this.label_name, this.label_email, this.edit_link, this.delete_link ], 'hide' : [ this.input_name, this.input_email, this.save_button ]});
+    this.hideElements(this.elements_to_update_array);
+    this.showElements(this.updated_elements_array);
   },
 
   edit: function() {
-    this.hideAndShowElements({ 'show' : [ this.input_name, this.input_email, this.save_button ], 'hide' : [ this.label_name, this.label_email, this.edit_link, this.delete_link ]});
+    this.showElements(this.elements_to_update_array);
+    this.hideElements(this.updated_elements_array);
+  },
+
+  hideElements: function(array) {
+    for (var i = 0; i < array.length; i++) {
+      array[i].style.display = 'none';
+    }
+  },
+
+  showElements: function(array) {
+    for (var i = 0; i < array.length; i++) {
+      array[i].style.display = 'block';
+    }
   },
 
   delete: function() {
@@ -130,20 +153,8 @@ TableRow.prototype = {
     this.label_name.innerText = this.input_name.value;
     this.label_email.innerText = this.input_email.value;
   },
-// create separate methods for hide and show
-  hideAndShowElements: function(elements_object) {
-    for (var key in elements_object) {     
-      for (var i = 0; i < elements_object[key].length; i++) {
-        if (key == 'show') {
-          elements_object[key][i].style.display = 'block';
-        } 
-        else if (key == 'hide') {
-          elements_object[key][i].style.display = 'none';
-        }
-      }
-    }
-  },
-
+  
+  //attributes are passed as an object with 'key' as the attribute and 'value' as the attribute value
   createAndAppendElement: function(element_type, parent_element, attributes) {
     var new_element = document.createElement(element_type);
     attributes = attributes || {};
