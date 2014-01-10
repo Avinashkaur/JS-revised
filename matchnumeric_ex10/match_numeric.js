@@ -1,27 +1,24 @@
-var Regex = {
-  NUMBER: /^([+-]?\d+([eE]\+?\-?\d+)?)(\.\d+)?$/
-}
-
-var MatchNumeric = function() {
+var UserInput = function() {
   this.init();
 }
 
-MatchNumeric.prototype = {
+UserInput.prototype = {
 
   init: function() {
     this.user_input = document.getElementById('user-input');
   },
 
-  checkInput: function() {
+  isNumeric: function() {
     var input_value = Number(this.user_input.value.trim()),
-        status = false;
+        status;
 
-    if (Regex.NUMBER.test(input_value)) {
+    if (!(isNaN(input_value))) {
       this.setResultField(true);
       status = true;
     }
     else {
       this.alertUserForInvalidInput();
+      status = false;
     }
     return status;
   },
@@ -40,9 +37,9 @@ MatchNumeric.prototype = {
 
 window.onload = function() {
   var user_form = document.getElementById('user-form'),
-      object = new MatchNumeric();
+      object = new UserInput();
 
   user_form.onsubmit = function() {
-    return object.checkInput();
+    return object.isNumeric();
   }
 }
