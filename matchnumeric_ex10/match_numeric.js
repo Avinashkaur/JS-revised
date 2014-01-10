@@ -12,13 +12,13 @@ UserInput.prototype = {
     var input_value = Number(this.user_input.value.trim()),
         status;
 
-    if (!(isNaN(input_value))) {
-      this.setResultField(true);
-      status = true;
-    }
-    else {
+    if (isNaN(input_value)) {
       this.alertUserForInvalidInput();
       status = false;
+    }
+    else {
+      this.setResultField(true);
+      status = true;
     }
     return status;
   },
