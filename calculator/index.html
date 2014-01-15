@@ -7,7 +7,10 @@
   </head>
   <body>
     <div id="container">
-      <input type="text" name="textfield" id="result-field" autofocus="autofocus" size="16" class="buttons" />
+      <div class="display">
+        <span id="number-field"></span>
+        <span id="operator-field"></span>
+      </div>
       <input type="button" id="memory-clear" value="MC" class="buttons" />
       <input type="button" class="memory-keys buttons" value="M+" data-value="+" />
       <input type="button" class="memory-keys buttons" value="M-" data-value="-" />
@@ -27,7 +30,7 @@
       <input type="button" class="numbers buttons" value="1" />
       <input type="button" class="numbers buttons" value="2" />
       <input type="button" class="numbers buttons" value="3" />
-      <input type="button" value="." id="decimal" class="buttons" />
+      <input type="button" value="." id="decimal" class="buttons numbers" />
       <input type="button" id="equal-to" value="=" class="buttons" />
       <input type="button" id="zero" value="0" class="numbers buttons" />
     </div>

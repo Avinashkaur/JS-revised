@@ -1,7 +1,7 @@
 var Regex = {
 
+  NUMBER: /^\d+$/,
   OPERATOR: /[+-/*]/,
-  NUMBER: /\d+/,
   DECIMAL: /\./
 
 }
@@ -11,155 +11,159 @@ var Calculator = function() {
 }
 
 Calculator.prototype = {
-  
+
+  input_string: '',
+
+  DEFAULT_VALUE: '0',
+
+  ERROR_TEXT: "Not A Number!",
+
   init: function() {
-    this.display_value = document.getElementById("result-field");
-    this.memory_array = "";
-    // invoke methods
-    this.disableScreen();
+    this.number_field = document.getElementById('number-field');
+    this.operator_field = document.getElementById('operator-field');
+    this.memory_array = '';
+    this.new_entry = false;
+    this.replace_operator = false;
+    this.number_field.innerText = this.DEFAULT_VALUE;
   },
 
-  disableScreen: function() {
-    this.display_value.disabled = true;
-  },
-  
-  displayInput: function(user_input) {
-    if ((user_input.match(Regex.NUMBER) || user_input.match(Regex.OPERATOR))) {
-      this.display_value.value = this.display_value.value + user_input; 
-    } 
+  displayNumber: function(user_input) {
+    //for entering second operand, the number field and operator field should be cleared
+    if ((this.operator_field.innerText.length != 0) && this.input_string) {
+      this.clearDisplay();
+      this.displayOperator('');
+    }
+    //if the number field shows a result of some expression, then the display is cleared, 
+    //so that new expression can be inserted
+    if (this.new_entry) {
+      this.clearDisplay();
+    }
+    this.number_field.innerText += user_input;
+    this.replace_operator = false;
+    this.new_entry = false;
   },
 
-  replaceOperator: function(operator) { 
-    var last_digit = this.getLastDigit();
+  addOperator: function(user_input) {
+    var last_digit = this.getLastDigit(this.input_string);
+    // for showing operator sign in operator field
+    this.displayOperator(user_input);
 
-    if (Regex.OPERATOR.test(last_digit)) {
-      this.display_value.value = this.display_value.value.replace(last_digit, operator);
+    if (Regex.OPERATOR.test(last_digit) && this.replace_operator) {
+      this.input_string = this.input_string.replace(new RegExp(last_digit), user_input);
     }
     else {
-      this.displayInput(operator);
+      this.input_string += this.number_field.innerText + user_input; 
     }
+    this.replace_operator = true;
   },
 
-  addDecimal: function() {
-    var last_digit = this.getLastDigit();
-
-    if (Regex.NUMBER.test(last_digit)) {
-      this.display_value.value = this.display_value.value + '.';
-    }
+  displayOperator: function(user_input) {
+    this.operator_field.innerText = user_input;
   },
 
-  getLastDigit: function() {
-    var value = this.display_value.value,
-        last_digit = value.slice(-1);
-
+  getLastDigit: function(user_string) {
+    var last_digit = user_string.slice(-1);
     return last_digit;
   },
 
-  clearValue: function() {
-    this.display_value.value = "";
+  negation: function() {
+    var value = this.number_field.innerText;
+    
+    if (value) {
+      if (value.charAt(0).match('-')) {
+        value = value.substr(1);
+      }
+      else {
+        value = value.replace(new RegExp(value), '-' + value);
+      }
+    }
+    this.number_field.innerText = value;
   },
 
-  addSignedNumber: function() {
-    var temp_string = this.display_value.value, 
-        temp_arr = "",
-        popped_number, 
-        signed_num,
-        i = (temp_string.length - 1);
+  calculateResult: function() {
+    var value = eval(this.input_string + this.number_field.innerText);
     
-    // traverse through the each character of string till we encounter an operator or the string
-    while ((i >= 0) && (Regex.DECIMAL.test(temp_string[i]) || Regex.NUMBER.test(temp_string[i]))) {
-      temp_arr += temp_string[i];
-      i--; 
+    if (value == undefined || value == Number.POSITIVE_INFINITY || value == Number.NEGATIVE_INFINITY || isNaN(value)) {
+      this.number_field.innerText = this.ERROR_TEXT;
     }
-    popped_number = temp_arr.split('').reverse().join('');
-    signed_num = '(-' + popped_number + ')';
-    this.display_value.value = this.display_value.value.replace(popped_number, signed_num);
+    else {
+      this.number_field.innerText = value;
+    }
+    this.input_string = '';
+    this.new_entry = true;
+  },
+
+  clearDisplay: function() {
+    this.number_field.innerText = '';
   },
 
   memoryFunction: function(operator) {
-    if (this.memory_array.length != 0) {
-      this.memory_array = this.memory_array + operator + this.display_value.value;
-    }
-    else {
-      this.memory_array = this.display_value.value;
-    }
-    this.display_value.value = "";
+    this.memory_array = this.memory_array + operator + this.number_field.innerText;
+    this.clearDisplay();
   },
 
   clearMemory: function() {
-    this.memory_array = "";
+    this.memory_array = '';
   },
 
   memoryResult: function() {
-    this.display_value.value = this.memory_array;
-  },
-
-  evaluateInput: function() {
-    var result;
-    try {
-      result = eval(this.display_value.value);
-      this.display_value.value = (result == undefined || result == Number.POSITIVE_INFINITY || result == Number.NEGATIVE_INFINITY || isNaN(result) ) ? "Error!" : result ;      
+    if (this.memory_array) {
+      this.number_field.innerText = eval(this.memory_array);
     }
-    catch (exception) {
-      this.clearValue();
-    } 
-  }
+    this.new_entry = true;
+  },
 
 }
 
 window.onload = function() {
   var calculator_object = new Calculator(),
-      numbers_keys = document.getElementsByClassName('numbers'),
-      operator_keys = document.getElementsByClassName('operators'),
-      signed_key = document.getElementById('signed-key'),
-      clear_key = document.getElementById('clear'),
+      number_keys = document.getElementsByClassName('numbers'),
+      equal_button = document.getElementById('equal-to'),
+      signed_button = document.getElementById('signed-key'),
       memory_keys = document.getElementsByClassName('memory-keys'),
       memory_clear = document.getElementById('memory-clear'),
       memory_result = document.getElementById('memory-result'),
-      decimal_button = document.getElementById('decimal'),
-      equal_to_button = document.getElementById('equal-to');
+      clear_key = document.getElementById('clear'),
+      operator_keys = document.getElementsByClassName('operators');
 
-  // for numerical keys
-  for (var i = 0; i < numbers_keys.length; i++) {
-    numbers_keys[i].addEventListener('click', function() {
-      calculator_object.displayInput(this.value.trim());
-    }, false);
+  for (var i = 0; i < number_keys.length; i++) {
+    number_keys[i].addEventListener('click', function() {
+      calculator_object.displayNumber(this.value);
+    });
   }
-  // for operator keys
+
   for (var i = 0; i < operator_keys.length; i++) {
     operator_keys[i].addEventListener('click', function() {
-      calculator_object.replaceOperator(this.value.trim());
-    }, false);
+      calculator_object.addOperator(this.value);
+    });
   }
-  // for memory keys
+
+  equal_button.addEventListener('click', function() {
+    calculator_object.calculateResult();
+  });
+  
+  signed_button.addEventListener('click', function() {
+    calculator_object.negation();
+  });
+
   for (var i = 0; i < memory_keys.length; i++) {
     memory_keys[i].addEventListener('click', function() {
       calculator_object.memoryFunction(this.getAttribute('data-value'));
-    }, false)
-  };
-  //key to add signed numbers
-  signed_key.addEventListener('click', function() {
-    calculator_object.addSignedNumber();
-  }, false);
-  //key to clear value on screen
-  clear_key.addEventListener('click', function() {
-    calculator_object.clearValue();
-  }, false);
-  // key to clear memory
-  memory_clear.addEventListener('click', function() {
-    calculator_object.clearMemory();
-  }, false);
-  // key to show result from memory
+    });
+  }
+  
   memory_result.addEventListener('click', function() {
     calculator_object.memoryResult();
-  }, false);
-  // key to evaluate result on screen
-  equal_to_button.addEventListener('click', function() {
-    calculator_object.evaluateInput();
-  }, false);
-  // key to add decimal value
-  decimal_button.addEventListener('click', function() {
-    calculator_object.addDecimal();
-  }, false)
+  });
+
+  memory_clear.addEventListener('click', function() {
+    calculator_object.clearMemory();
+    calculator_object.clearDisplay();
+  });
+
+  clear_key.addEventListener('click', function() {
+    calculator_object.clearDisplay();
+    calculator_object.input_string = '';
+  });
 
 }

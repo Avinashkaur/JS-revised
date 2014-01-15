@@ -1,5 +1,6 @@
 /*css */
 
-#container { width:300px; height:350px; background-color:#ececec; }
-#container #result-field { width:200px; height:80px; background-color:#fafad2; margin: 10px 25px; }
+.display { width:248px; height:30px; float:left; background:#fafad2; padding:10px 20px; margin:10px 5px; }
+.display #number-field { width:100%; text-align:right; float:left; }
+#container { width:300px; height:310px; background-color:#ececec; margin:0 auto; padding:0px 10px; }
 #container .buttons { float:left; width:68px; margin:2px 1px; height:30px; background-color:#fff; color:black; padding:3px 4px; }
