@@ -57,8 +57,6 @@ var TableRow = function(table, row_id) {
   this.table = table;
   this.row = this.createAndAppendElement('tr', this.table, { 'data-row-id' : row_id });
   
-  this.array_to_display = [ this.label_name, this.label_email, this.edit_link, this.delete_link ];
-  this.array_to_edit = [ this.input_name, this.input_email, this.save_button ];
   // invoke methods
   this.createCells();
 }
@@ -133,14 +131,18 @@ TableRow.prototype = {
   },
 
   hideElements: function(array) {
-    for (var i = 0; i < array.length; i++) {
-      array[i].style.display = 'none';
-    }
+    this.setVisibility(array, 'none');
   },
 
   showElements: function(array) {
+    this.setVisibility(array, 'block');
+  },
+
+  setVisibility: function(array, visibility) {
+    console.log(array);
+    console.log(visibility);
     for (var i = 0; i < array.length; i++) {
-      array[i].style.display = 'block';
+      array[i].style.display = visibility;
     }
   },
 
