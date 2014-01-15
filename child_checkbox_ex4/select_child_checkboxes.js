@@ -12,7 +12,7 @@ var OtherLists = {
 
 }
 
-var SelectChildBoxes = function(selected_checkbox) {
+var ItemsList = function(selected_checkbox) {
   this.checkbox = selected_checkbox;
   
   // invoke method
@@ -22,7 +22,7 @@ var SelectChildBoxes = function(selected_checkbox) {
 
 }
 
-SelectChildBoxes.prototype = {
+ItemsList.prototype = {
 
   init: function() {
     this.checkbox.checked = false;
@@ -63,6 +63,6 @@ window.onload = function() {
       child_lists = document.getElementsByClassName('child-list');
  
   for (var i = 0; i < parent_checkboxes.length; i++) {
-    new SelectChildBoxes(parent_checkboxes[i]);
+    new ItemsList(parent_checkboxes[i]);
   }
 }
