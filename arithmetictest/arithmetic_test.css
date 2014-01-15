@@ -1,0 +1,7 @@
+/*styles for arithmetic test*/
+
+.fl { float:left; }
+.quiz { display:block; margin:10px auto; width:70%; text-align:center; }
+.quiz .first { width:96%; background:#acacac; padding:10px 5px; }
+.quiz .second { clear:both; background:#ececec; padding:20px; width:85%; }
+.quiz #answer, .quiz #timer, .quiz #score { width:90%; margin:10px 0px; }
