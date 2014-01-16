@@ -1,13 +1,13 @@
 // to set value of other lists other than the checked list
 var OtherLists = {
 
-  temp_array: [],
+  objects_array: [],
 
-  unCheckAndHide: function(object) {
-    if (OtherLists.temp_array.length != 0) {
-      OtherLists.temp_array.pop().init();
+  uncheckAndHide: function(list_object) {
+    if (OtherLists.objects_array.length != 0) {
+      OtherLists.objects_array.pop().init();
     }
-    OtherLists.temp_array.push(object);
+    OtherLists.objects_array.push(list_object);
   }
 
 }
@@ -18,7 +18,7 @@ var ItemsList = function(selected_checkbox) {
   // invoke method
   this.setList();
   this.init();
-  this.bindEvents(this);
+  this.bindEvents();
 
 }
 
@@ -35,7 +35,8 @@ ItemsList.prototype = {
     this.child_list_elements = this.child_list.getElementsByClassName('child');
   },
 
-  bindEvents: function(this_object) {
+  bindEvents: function() {
+    var this_object = this;
     this.checkbox.onclick = function() {
       this_object.checkUncheckChildElements(this_object);
       this_object.showHideChildElements();
@@ -48,7 +49,7 @@ ItemsList.prototype = {
     }
     if (this.checkbox.checked) {
       this.checkbox.scrollIntoView(true);
-      OtherLists.unCheckAndHide(object);
+      OtherLists.uncheckAndHide(object);
     }    
   },
 
